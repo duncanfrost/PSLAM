@@ -3,8 +3,7 @@
 
 #include <sys/time.h>
 
-#define USE_OMP_C
-#ifndef USE_OMP_C
+#ifndef USE_OMP
 class amoTimer
 {
   public:

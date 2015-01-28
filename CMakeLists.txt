@@ -7,7 +7,11 @@ IF(COMMAND CMAKE_POLICY)
   CMAKE_POLICY(SET CMP0003 NEW)
 ENDIF(COMMAND CMAKE_POLICY)
 
+
 PROJECT(OBJECTR3D)
+INCLUDE (FindPkgConfig)
+SET (CMAKE_VERBOSE_MAKEFILE true)
+
 
 SET(COMPUTEROFFICE 1)
 
@@ -115,11 +119,21 @@ set(OBJECTR3D_EXTERN_LIBS ${OBJECTR3D_EXTERN_LIBS} -lGLEW)
 # OpenCV - For image acquisition
 #----------------------------------------------------------------------
 
-include_directories("/usr/local/include/opencv2")
-LINK_DIRECTORIES( "/home/amaury/Program/Libs/opencv-2.4.8/build/lib" )
-set(OBJECTR3D_EXTERN_LIBS ${OBJECTR3D_EXTERN_LIBS} -lopencv_core -lopencv_ml -lopencv_highgui -lopencv_imgproc -lopencv_features2d -lopencv_gpu -lopencv_flann -lopencv_nonfree -lopencv_ocl -lopencv_calib3d -lopencv_video)
+pkg_search_module (OPENCV opencv REQUIRED)
+include_directories(${OPENCV_INCLUDE_DIRS})
+set(OBJECTR3D_EXTERN_LIBS ${OBJECTR3D_EXTERN_LIBS} ${OPENCV_LDFLAGS})
+
+
+
+message( "${OPENCV_LDFLAGS}")
+
+#set(OBJECTR3D_EXTERN_LIBS ${OBJECTR3D_EXTERN_LIBS} -lopencv_core -lopencv_ml -lopencv_highgui -lopencv_imgproc -lopencv_features2d -lopencv_gpu -lopencv_flann -lopencv_nonfree -lopencv_ocl -lopencv_calib3d -lopencv_video)
+
+
+
 #if opencv searched for cuda nppi
-LINK_DIRECTORIES( "/usr/local/cuda-5.5/targets/x86_64-linux/lib/" )
+LINK_DIRECTORIES( "/usr/local/cuda/targets/x86_64-linux/lib/" )
+include_directories("/usr/local/cuda/targets/x86_64-linux/include")
 
 
 
@@ -167,30 +181,6 @@ INCLUDE_DIRECTORIES(${OBJECTR3D_INTERN_INCLUDE_DIR} ${OBJECTR3D_EXTERN_INCLUDE_D
 # Add library path
 #----------------------------------------------------------------------
 LINK_DIRECTORIES(${OBJECTR3D_SOURCE_DIR}/lib)
-
-
-#----------------------------------------------------------------------
-# add html-doc target for doxygen documentation building
-#----------------------------------------------------------------------
-FIND_PACKAGE(Doxygen)
-IF (DOXYGEN_FOUND)  
-  ## we need latex for doxygen because of the formulas
-  FIND_PACKAGE(LATEX)
-  IF    (NOT LATEX_COMPILER)
-    MESSAGE(STATUS "latex command LATEX_COMPILER not found but usually required. You will probably get warnings and user inetraction on doxy run.")
-  ENDIF (NOT LATEX_COMPILER)
-  IF    (NOT MAKEINDEX_COMPILER)
-    MESSAGE(STATUS "makeindex command MAKEINDEX_COMPILER not found but usually required.")
-  ENDIF (NOT MAKEINDEX_COMPILER)
-  IF    (NOT DVIPS_CONVERTER)
-    MESSAGE(STATUS "dvips command DVIPS_CONVERTER not found but usually required.")
-  ENDIF (NOT DVIPS_CONVERTER)
-   
-  CONFIGURE_FILE(${OBJECTR3D_SOURCE_DIR}/doc/config-doxygen.in
-    ${OBJECTR3D_SOURCE_DIR}/doc/config-doxygen
-    @ONLY )
-  ADD_CUSTOM_TARGET(html-doc ${DOXYGEN_EXECUTABLE} ${OBJECTR3D_SOURCE_DIR}/doc/config-doxygen) 
-ENDIF(DOXYGEN_FOUND)
 
 #----------------------------------------------------------------------
 # Add definitions
