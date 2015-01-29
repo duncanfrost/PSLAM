@@ -43,9 +43,9 @@ public:
 	
 	//if map tracker need a new key frame=> provide current image,relative pose with one KF and current neigbors
 	//create new key frame and update neigbors with new KF
-	void createNewKeyFrame(cv::Mat &_current_img,HomogeneousMatrix &relPose,int &idrelKF,std::vector<int> &id_closestKF);
+	void createNewKeyFrame(cv::Mat &_current_img,HomogeneousMatrix22 &relPose,int &idrelKF,std::vector<int> &id_closestKF);
 	//for simulation
-	void createNewKeyFrame(cv::Mat &_current_img,HomogeneousMatrix &_pose);
+	void createNewKeyFrame(cv::Mat &_current_img,HomogeneousMatrix22 &_pose);
 	void createNewEdge(int kfIdFrom,int kfIdTo);
 	
 	
@@ -62,7 +62,7 @@ public:
 	//get information matrix corresponding to min variance optimisation between local features of two neigboring keyframes
 	//can be used in PGO later
 	MatrixXf getInformationMatrixMatches(int kfOrig,NeigbourKFNew &neigb, Camera *myCamera);
-	void getRelativePoseAndScale(int _kf1,int _kf2,float &optRelScale,HomogeneousMatrix &optRelPose,float &infoScale,MatrixXf &infoPose,int nb_iter=20);
+	void getRelativePoseAndScale(int _kf1,int _kf2,float &optRelScale,HomogeneousMatrix22 &optRelPose,float &infoScale,MatrixXf &infoPose,int nb_iter=20);
 
 	//if a KF in map had a better fundamental matrix => new local features must have been create
 	//=>new map points can be created

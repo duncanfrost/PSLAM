@@ -9,6 +9,8 @@
 #include "../src/TrackEngines/MapTracker.h"
 #include "../src/Primitives/obMap.h"
 #include "../src/MapEngines/BundleAdjuster.h"
+#include "../src/MapEngines/MapOptimiserEssential.h"
+#include "../src/MapEngines/MapOptimiser.h"
 
 #include <Eigen/Core>
 using namespace Eigen;
@@ -37,7 +39,7 @@ MapTracker *mapTracker;
 	
 
 int id_current_frame=0;
-HomogeneousMatrix current_estimated_pose;
+HomogeneousMatrix22 current_estimated_pose;
 
 PlottingWindow *PlotWindow;
 
@@ -83,7 +85,7 @@ int main(int argc, char** argv)
 	mMapWindow->addCamera(&current_estimated_pose,Vector3f(1.,0.,0.));
 	
 	//HomogeneousMatrix moveCam(0.,3.,3.,1.0,0,0);
-	HomogeneousMatrix moveCam(0.,3.,3.,1.0,0,0);
+    HomogeneousMatrix22 moveCam(0.,3.,3.,1.0,0,0);
 	mMapWindow->setCameraPose(moveCam);
 	
 	std::cout<<"Start"<<std::endl;
@@ -112,8 +114,8 @@ void Idle(void)
 
 		//process it
 		//mapTracker->TrackFrame(current_img_BW);
-		mapTracker->TrackFrame(current_img_BW,myVideoSource->GetFramePointer(),true);
-		current_estimated_pose=mapTracker->getPose();//update current camera pose for map viewer
+    //	mapTracker->TrackFrame(current_img_BW,myVideoSource->GetFramePointer(),true);
+//		current_estimated_pose=mapTracker->getPose();//update current camera pose for map viewer
 		if(stopAtEachFrame)pause_process=true;
 		
 		//get confidence last edge and plot it
@@ -331,14 +333,14 @@ void processNormalKeysPlus(unsigned char key, int x, int y)
 		case 's':
 			//try change scale: x2 last KF
 			updateScaleLastKeyFrame();
-			mapTracker->updateRelPoseAfterMapOptim();
-			current_estimated_pose=mapTracker->getPose();
+//			mapTracker->updateRelPoseAfterMapOptim();
+    //		current_estimated_pose=mapTracker->getPose();
 			break;
 		case 'd':
 			//try change scale: x2 last KF
 			updateScaleLastKeyFrame2();
-			mapTracker->updateRelPoseAfterMapOptim();
-			current_estimated_pose=mapTracker->getPose();
+    //		mapTracker->updateRelPoseAfterMapOptim();
+//			current_estimated_pose=mapTracker->getPose();
 			break;
 		case ' ':
 			pause_process=!pause_process;

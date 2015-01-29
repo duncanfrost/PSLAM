@@ -4,6 +4,8 @@
 
 #define AMOVERBOSE 1
 
+
+
 #include <fstream>
 #include "../src/Primitives/Camera.h" 
 #include "../src/Visualisation/VisualisationModule.h"
@@ -12,8 +14,18 @@
 #include "../src/TrackEngines/MapTracker.h"
 #include "../src/Primitives/obMap.h"
 #include "../src/MapEngines/BundleAdjuster.h"
+//#include "../src/Primitives/HomogeneousMatrix.h"
+
+
+#include "../src/AmoDefines.h"
+#include "../src/Primitives/Camera.h"
+//#include "ImageProcess.h"
+#include "../src/Primitives/obMap.h"
+#include "../src/Primitives/HomogeneousMatrix.h"
 
 #include <Eigen/Core>
+
+
 using namespace Eigen;
 
 void Idle(void) ;
@@ -37,20 +49,21 @@ obMap Map_Estim;
 //obMapRun Map_Estim;
 //map tracker
 MapTracker *mapTracker;
+
+using namespace std;
 	
 
 int id_current_frame=0;
-HomogeneousMatrix current_estimated_pose;
+HomogeneousMatrix22 current_estimated_pose;
 
 
 int main(int argc, char** argv)
 {
 	InitProcAndGPU();
 
-	std::cout<<"################################################################# "<<std::endl;
-	std::cout<<"################    SLAM    NEW            ###################### "<<std::endl;
-	std::cout<<"################################################################# "<<std::endl;
-	//get camera calibration
+
+    //get camera calibration
+
 	myVideoSource=new VideoSourceLiveCV(CamPlaystationEye);
 	//myVideoSource=new VideoSourceSeq("/media/Data/Datas/VirtualSeq/new/img_%d.png",CamPlaystationEye,0);
 	//myVideoSource->setRecord("/home/amaury/Program/Projects/files/record/%06d.png");
@@ -59,40 +72,65 @@ int main(int argc, char** argv)
 	
 	Map_Estim.InitCam(&myCamera);
 	
-	//create mapTracker
-	mapTracker=new MapTracker(&myCamera,&Map_Estim);	
-	
-	//create a window to visualize estimated map
-	VisuEngine= new VisualisationModule(&Idle);
-	VisuEngine->addWindowImage("Input image",(amoVideoSource*)myVideoSource);
-	VisuEngine->setOnDraw(&addDrawFunction);
-	VisuEngine->setOnKeyPress(&processNormalKeysPlus);
 
-	VisuEngine->addWindowMap("Map",640,480,&myCamera,mMapWindow);
-	VisuEngine->setOnKeyPress(&processNormalKeysPlus);
-	mMapWindow->addMap(&Map_Estim);
+    mapTracker=new MapTracker(&myCamera,&Map_Estim);
+
+    coutRed<< sizeof(Matrix4f) << endlRed;
+    coutRed<< sizeof(Matrix4f) << endlRed;
+
+    std::cout << "Address of maptracker: " << mapTracker << std::endl;
+
+    vector<int> vClosest = mapTracker->getClosestKFs();
+    cout << sizeof(HomogeneousMatrix22) << endl;
+
+
+    HomogeneousMatrix22 H;
+      cout << sizeof(H) << endl;
+
+
+    //H.get_HomogMatrix();
+
+
+//      coutBlue << "Function pointer: " << (void *)Idle << endlBlue;
+//    //create a window to visualize estimated map
+//    VisuEngine= new VisualisationModule(&Idle);
+//    VisuEngine->addWindowImage("Input image",(amoVideoSource*)myVideoSource);
+//    VisuEngine->setOnDraw(&addDrawFunction);
+//    VisuEngine->setOnKeyPress(&processNormalKeysPlus);
+
+//    VisuEngine->addWindowMap("Map",640,480,&myCamera,mMapWindow);
+//    VisuEngine->setOnKeyPress(&processNormalKeysPlus);
+//    mMapWindow->addMap(&Map_Estim);
 	
-	//add current estimated cam position in map viewer
-	mMapWindow->addCamera(&current_estimated_pose,Vector3f(1.,0.,0.));
+//    //add current estimated cam position in map viewer
+//    mMapWindow->addCamera(&current_estimated_pose,Vector3f(1.,0.,0.));
 	
-	//HomogeneousMatrix moveCam(0.,3.,3.,1.0,0,0);
-	HomogeneousMatrix moveCam(0.,-3.,3.,-1.0,0,0);
-	mMapWindow->setCameraPose(moveCam);
+//    //HomogeneousMatrix moveCam(0.,3.,3.,1.0,0,0);
+//    HomogeneousMatrix moveCam(0.,-3.,3.,-1.0,0,0);
+//    mMapWindow->setCameraPose(moveCam);
 
 	
-	std::cout<<"##################################################################"<<std::endl;
-	std::cout<<"Commands:"<<std::endl;
-	std::cout<<"press:\t -\'m\' to save map (can be loaded in MapOpt)"<<std::endl;
-	std::cout<<"##################################################################"<<std::endl;
+//    std::cout<<"##################################################################"<<std::endl;
+//    std::cout<<"Commands:"<<std::endl;
+//    std::cout<<"press:\t -\'m\' to save map (can be loaded in MapOpt)"<<std::endl;
+//    std::cout<<"##################################################################"<<std::endl;
 
-	VisuEngine->prepareLoop(argc, argv);
-	mMapWindow->addButton("Textures",&onClickShowTexture);
-	mMapWindow->addButton("Matching",&onClickShowMatching);
-	mMapWindow->addButton("LocalFeat",&onClickShowLocFeatures);
+//    VisuEngine->prepareLoop(argc, argv);
+//    mMapWindow->addButton("Textures",&onClickShowTexture);
+//    mMapWindow->addButton("Matching",&onClickShowMatching);
+//    mMapWindow->addButton("LocalFeat",&onClickShowLocFeatures);
+
+//    std::cout << "got here!" << std::endl;
+
+//    coutGreen << mapTracker << endlGreen;
 	
-	VisuEngine->startLoop(argc, argv);
+//    VisuEngine->startLoop(argc, argv);
+
+
+
+
 	
-	return 0;
+//	return 0;
 }
 
 
@@ -101,29 +139,38 @@ bool pause_process=false;
 
 void Idle(void) 
 {
-	//grab new image
-	myVideoSource->grabNewFrame();
-	cv::Mat &current_img_BW=*myVideoSource->GetFramePointerBW();
+//   vector<int> vClosest = mapTracker->getClosestKFs();
+//   coutRed << mapTracker << endlRed;
+
+
+
+
+
+
+
+//    //grab new image
+//    myVideoSource->grabNewFrame();
+//    cv::Mat &current_img_BW=*myVideoSource->GetFramePointerBW();
 	  
-	//process it
-	if(!pause_process)
-	{
-		mapTracker->TrackFrame(current_img_BW);
-		amoTimer timerIdle;
-		timerIdle.start();
-		//mapTracker->TrackFrame(current_img_BW,myVideoSource->GetFramePointer(),true);
-		timerIdle.stop("TrackFrame");
-		//mapTracker->TrackFrame(current_img_BW,myVideoSource->GetFramePointer());
-		current_estimated_pose=mapTracker->getPose();//update current camera pose for map viewer
+//    //process it
+//    if(!pause_process)
+//    {
+//        mapTracker->TrackFrame(current_img_BW);
+//       current_estimated_pose=mapTracker->getPose();//update current camera pose for map viewer
+//       coutGreen << current_estimated_pose.get_HomogMatrix() << endlGreen;
+
+
 	
-		mMapWindow->showClosestKF(mapTracker->getIdRelKF());
-		mMapWindow->showActiveKF(mapTracker->getClosestKFs());
+//        mMapWindow->showClosestKF(mapTracker->getIdRelKF());
+
+//        //vector<int> vClosest = mapTracker->getClosestKFs();
+//        mMapWindow->showActiveKF(vClosest);
 		
-	}
+//    }
 	
 	
-	VisuEngine->drawWindows();
-	id_current_frame++;
+    //VisuEngine->drawWindows();
+    //id_current_frame++;
 }
 void addDrawFunction(void) 
 {	

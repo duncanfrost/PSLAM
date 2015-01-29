@@ -22,7 +22,7 @@ int obMap::createUnconnectedNewKF(cv::Mat &_img)
 	
 	KeyFrameList.push_back(newKF);
 	
-	KeyFrameList[idNewKF].Init(idNewKF,_img,HomogeneousMatrix());
+    KeyFrameList[idNewKF].Init(idNewKF,_img,HomogeneousMatrix22());
 	
 	return idNewKF;
 }
@@ -35,7 +35,7 @@ struct linkFeature//one per feature per neigbor
 	//int idPoint;		
 };
 
-void obMap::createNewKeyFrame(cv::Mat &_current_img,HomogeneousMatrix &_pose)
+void obMap::createNewKeyFrame(cv::Mat &_current_img,HomogeneousMatrix22 &_pose)
 {
 	int idNewKF=KeyFrameList.size();
 	std::cout<<"Create KF "<<idNewKF<<std::endl;
@@ -45,7 +45,7 @@ void obMap::createNewKeyFrame(cv::Mat &_current_img,HomogeneousMatrix &_pose)
 	KeyFrameList[idNewKF].Init(idNewKF,_current_img,_pose);	
 }
 
-void obMap::createNewKeyFrame(cv::Mat &_current_img,HomogeneousMatrix &relPose,int &idrelKF,std::vector<int> &id_closestKF)
+void obMap::createNewKeyFrame(cv::Mat &_current_img,HomogeneousMatrix22 &relPose,int &idrelKF,std::vector<int> &id_closestKF)
 {
 	int idNewKF=KeyFrameList.size();
 	std::cout<<"Create KF "<<idNewKF<<std::endl;
@@ -59,7 +59,7 @@ void obMap::createNewKeyFrame(cv::Mat &_current_img,HomogeneousMatrix &relPose,i
 	//while to be valid an edge must have at least 3 features shared by KFs 
 	for(int i=0;i<id_closestKF.size();i++)
 		
-		if(KeyFrameList[id_closestKF[i]].getLastNumberMatches()<MIN_MATCHES_EDGE)
+        if(KeyFrameList[id_closestKF[i]].getLastNumberMatches()<MIN_MATCHES_EDGE)
 		{
 			id_closestKF.erase(id_closestKF.begin()+i);
 			i--;
@@ -83,7 +83,7 @@ void obMap::createNewKeyFrame(cv::Mat &_current_img,HomogeneousMatrix &relPose,i
 	//use inverse of matches and inverse of 3D movement 
 	std::cout<<"id_max_fundamental = "<<id_max_fundamental<<std::endl;
 	std::vector<p_match> matches_bestNeigbor=KeyFrameList[id_max_fundamental].getCurrentMatches();
-	HomogeneousMatrix relPose_bestNeigbor=KeyFrameList[id_max_fundamental].getRelativePose();
+    HomogeneousMatrix22 relPose_bestNeigbor=KeyFrameList[id_max_fundamental].getRelativePose();
 	KeyFrameList[idNewKF].useNeigborForInitLocalStereo(KeyFrameList[id_max_fundamental].getImg_p(0),matches_bestNeigbor,relPose_bestNeigbor,myCamera);
 	
 	//create link with neigbors (if enough overlap?)
@@ -134,7 +134,7 @@ void obMap::createNewKeyFrame(cv::Mat &_current_img,HomogeneousMatrix &relPose,i
 	//change tracker info	
 	id_closestKF.push_back(idNewKF);
 	idrelKF=idNewKF;
-	relPose=HomogeneousMatrix();
+    relPose=HomogeneousMatrix22();
 }
 void obMap::createNewEdge(int kfIdFrom,int kfIdTo)
 {
@@ -749,7 +749,7 @@ MatrixXf obMap::getInformationMatrixMatches(int kfOrig,NeigbourKFNew &neigbor, C
 
 	MatrixXf H(6,6);H.setZero();
 	std::vector<float> vdErrorSquared;
-	HomogeneousMatrix &relPose=neigbor.relative_poses;
+    HomogeneousMatrix22 &relPose=neigbor.relative_poses;
 	
 	for(int m=0;m<neigbor.matches.size();m++)
 	{
@@ -807,7 +807,7 @@ struct kf_loc_scal_jac
 	Vector3f de_dsn;//jacobian wrt kf scale
 	float weight;
 };
-void obMap::getRelativePoseAndScale(int _kfcurr,int _kfneigb,float &optRelScale,HomogeneousMatrix &optRelPose,float &infoScale,MatrixXf &infoPose,int nb_iter)
+void obMap::getRelativePoseAndScale(int _kfcurr,int _kfneigb,float &optRelScale,HomogeneousMatrix22 &optRelPose,float &infoScale,MatrixXf &infoPose,int nb_iter)
 {
 	bool verb_BA=false;
 	
@@ -819,7 +819,7 @@ void obMap::getRelativePoseAndScale(int _kfcurr,int _kfneigb,float &optRelScale,
 	//only the pose and scale of second kf are optimised
 	float scales_kf2=optRelScale;
 	//HomogeneousMatrix pose_kf2=KFn.getPose();
-	HomogeneousMatrix pose_kf2=optRelPose.inverse()*KFc.getPose();
+    HomogeneousMatrix22 pose_kf2=optRelPose.inverse()*KFc.getPose();
 	int nbOptimKf=1;
 	
 	//std::cout<<"relPoseBefore = "<<KFc.getPose()*KFn.getPose().inverse()<<std::endl;
@@ -834,9 +834,9 @@ void obMap::getRelativePoseAndScale(int _kfcurr,int _kfneigb,float &optRelScale,
 		//that should be all the points defined in this keyframes
 		std::vector<kf_loc_scal_jac> list_jacobian_scale;
 		
-		HomogeneousMatrix pose_c=KFc.getPose();
-		HomogeneousMatrix pose_n=pose_kf2;		
-		HomogeneousMatrix relPose=pose_c*pose_n.inverse();
+        HomogeneousMatrix22 pose_c=KFc.getPose();
+        HomogeneousMatrix22 pose_n=pose_kf2;
+        HomogeneousMatrix22 relPose=pose_c*pose_n.inverse();
 		
 		//to get from relPose to deriv wrt pose_c and pose_n
 		MatrixXf M1(6,6);
@@ -937,7 +937,7 @@ void obMap::getRelativePoseAndScale(int _kfcurr,int _kfneigb,float &optRelScale,
 			
 			if(verb_BA)std::cout<<"\tapply update"<<std::endl;
 			VectorXf dp(Dp.segment(0,6));
-			pose_kf2=HomogeneousMatrix(dp)* pose_kf2;
+            pose_kf2=HomogeneousMatrix22(dp)* pose_kf2;
 			
 		}	
 	}
@@ -950,9 +950,9 @@ void obMap::getRelativePoseAndScale(int _kfcurr,int _kfneigb,float &optRelScale,
 		//that should be all the points defined in this keyframes
 		std::vector<kf_loc_scal_jac> list_jacobian_scale;
 		
-		HomogeneousMatrix pose_c=KFc.getPose();
-		HomogeneousMatrix pose_n=pose_kf2;		
-		HomogeneousMatrix relPose=pose_c*pose_n.inverse();
+        HomogeneousMatrix22 pose_c=KFc.getPose();
+        HomogeneousMatrix22 pose_n=pose_kf2;
+        HomogeneousMatrix22 relPose=pose_c*pose_n.inverse();
 		
 		//to get from relPose to deriv wrt pose_c and pose_n
 		MatrixXf M1(6,6);
@@ -1060,7 +1060,7 @@ void obMap::getRelativePoseAndScale(int _kfcurr,int _kfneigb,float &optRelScale,
 			//scales_kfs[j]=(1.+ds)*scales_kfs[j];
 			scales_kf2=ds+scales_kf2;
 			VectorXf dp(Dp.segment(1,6));
-			pose_kf2=HomogeneousMatrix(dp)* pose_kf2;
+            pose_kf2=HomogeneousMatrix22(dp)* pose_kf2;
 			
 		}
 		

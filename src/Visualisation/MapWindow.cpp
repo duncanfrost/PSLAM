@@ -5,7 +5,7 @@
 namespace MapWindowStuff
 {
 //pose from which map is displayed
-HomogeneousMatrix currentCamPose;
+HomogeneousMatrix22 currentCamPose;
 void keyboard_process(unsigned char key, int x, int y);
 void mouse_process(int button, int state, int x, int y);
 void motion_process(int x, int y);
@@ -42,7 +42,7 @@ MapWindow::MapWindow(std::string _title,int _width,int _height,Camera *_myCamera
 	b_showLocalFeature=true;
 }
 
-void MapWindow::addCamera(HomogeneousMatrix *_camPose,Vector3f _col,float _lineSize)
+void MapWindow::addCamera(HomogeneousMatrix22 *_camPose,Vector3f _col,float _lineSize)
 {
 	if(cameraPoses.size()==0 && MapsNew.size()==0)
 		currentCamPose=*_camPose;
@@ -75,9 +75,9 @@ void MapWindow::set_camera_drawn_size(float _f)
 }
 
 
-void drawCamera(HomogeneousMatrix cameraPose,Camera *myCamera,HomogeneousMatrix &)
+void drawCamera(HomogeneousMatrix22 cameraPose,Camera *myCamera,HomogeneousMatrix22 &)
 {
-	HomogeneousMatrix PoseInverse =cameraPose.inverse();
+	HomogeneousMatrix22 PoseInverse =cameraPose.inverse();
 	Vector3f pt_center_cam=currentCamPose*PoseInverse.get_translation();
 	Vector2f center_cam=myCamera->Project(pt_center_cam);
 		
@@ -144,7 +144,7 @@ void MapWindow::prepare_draw()
 				glColor3f(1.-colMapsNew[m][0],0.5*colMapsNew[m][1],0.5*colMapsNew[m][2]);
 				//center cam current		
 				KeyFrame *tKF=MapsNew[m]->getKF(kfToShow[c]);
-				HomogeneousMatrix PoseInverse=tKF->getPose().inverse();
+				HomogeneousMatrix22 PoseInverse=tKF->getPose().inverse();
 				
 				Vector3f pt_center_cam=currentCamPose*PoseInverse.get_translation();
 				Vector2f center_cam=myCamera->Project(pt_center_cam);
@@ -162,7 +162,7 @@ void MapWindow::prepare_draw()
 				glColor3f(1.-colMapsNew[m][0],0.5*colMapsNew[m][1],0.5*colMapsNew[m][2]);
 				//center cam current		
 				KeyFrame *tKF=MapsNew[m]->getKF(kfToShow[c]);
-				HomogeneousMatrix PoseInverse=tKF->getPose().inverse();
+				HomogeneousMatrix22 PoseInverse=tKF->getPose().inverse();
 				
 				Vector3f pt_center_cam=currentCamPose*PoseInverse.get_translation();
 				Vector2f center_cam=myCamera->Project(pt_center_cam);
@@ -174,7 +174,7 @@ void MapWindow::prepare_draw()
 					float lineWidth=4*scoreEdge/maxScoreEdge;
 					if(lineWidth<0.5)lineWidth=0.5;
 					glLineWidth(lineWidth);
-					HomogeneousMatrix PoseInverse2 =MapsNew[m]->getKF(neigb)->getPose().inverse();
+					HomogeneousMatrix22 PoseInverse2 =MapsNew[m]->getKF(neigb)->getPose().inverse();
 					Vector3f pt_center_cam2=currentCamPose*PoseInverse2.get_translation();
 					if(pt_center_cam2[2]>z_near_map_win)
 					{
@@ -290,7 +290,7 @@ void MapWindow::prepare_draw()
 									if(id_feat_v!=-1)
 									{
 										uptoscaleFeature &feat_v=*MapsNew[m]->getKF(kfView)->getPtLocalBestFeatures(id_feat_v);
-										HomogeneousMatrix invHv=MapsNew[m]->getKF(kfView)->getPose().inverse();
+										HomogeneousMatrix22 invHv=MapsNew[m]->getKF(kfView)->getPose().inverse();
 										Vector3f pt_c2;pt_c2=currentCamPose* invHv*(toHomogeneous(feat_v.posRef)*feat_v.depthInRef);
 										if(pt_c2[2]>0)
 										{
@@ -311,7 +311,7 @@ void MapWindow::prepare_draw()
 				//draw kf features
 				if(b_showLocalFeature)
 				{
-					HomogeneousMatrix invH=tKF->getPose().inverse();
+					HomogeneousMatrix22 invH=tKF->getPose().inverse();
 					
 					//get rec Angle max
 					float recAngl_max=0;
@@ -430,13 +430,13 @@ void MapWindow::prepare_draw()
 				
 				glEnable(GL_LINE_STIPPLE);
 				glColor3f(1-colMapsNew[m][0],colMapsNew[m][1],1-colMapsNew[m][2]);
-				HomogeneousMatrix camPair=tKF->getBestRelPose()*tKF->getPose();
+				HomogeneousMatrix22 camPair=tKF->getBestRelPose()*tKF->getPose();
 				drawCamera(camPair,myCamera,currentCamPose);
 				
 				//draw connection with camera
 				//glDisable(GL_LINE_STIPPLE);
-				HomogeneousMatrix CamInv =tKF->getPose().inverse();
-				HomogeneousMatrix CamPairInv =camPair.inverse();
+				HomogeneousMatrix22 CamInv =tKF->getPose().inverse();
+				HomogeneousMatrix22 CamPairInv =camPair.inverse();
 				Vector3f pt_center_cam=currentCamPose*CamInv.get_translation();
 				Vector3f pt_center_camInv=currentCamPose*CamPairInv.get_translation();
 				if(pt_center_camInv[2]>z_near_map_win && pt_center_cam[2]>z_near_map_win)
@@ -642,15 +642,15 @@ void MapWindowStuff::motion_process(int x, int y)
 		(*VisuWindowNs::mImageWinStatic[idS].processMouseActiveMotion_fct)(x,y);   
     
 }
-void MapWindow::moveCamera(HomogeneousMatrix _cHc2)
+void MapWindow::moveCamera(HomogeneousMatrix22 _cHc2)
 {
 	currentCamPose=_cHc2*currentCamPose;
 }
-void MapWindow::setCameraPose(HomogeneousMatrix _cHc2)
+void MapWindow::setCameraPose(HomogeneousMatrix22 _cHc2)
 {
 	currentCamPose=_cHc2;	
 }
-HomogeneousMatrix MapWindow::getCameraPose()
+HomogeneousMatrix22 MapWindow::getCameraPose()
 {
 	return currentCamPose;
 }

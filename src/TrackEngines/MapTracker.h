@@ -2,46 +2,86 @@
 
 #pragma once
 
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
-#include <sys/time.h>
+//#include <opencv/cv.h>
+//#include <opencv/highgui.h>
+//#include <sys/time.h>
 
 #include <Eigen/Core>
 using namespace Eigen;
 
 #include "../AmoDefines.h"
-#include "ImageProcess.h"
-#include "../Primitives/obMap.h" 
+#include "../Primitives/Camera.h"
+//#include "ImageProcess.h"
+#include "../Primitives/obMap.h"
 #include "../Primitives/HomogeneousMatrix.h"
-#include "GlobalTransfoEstim.h"
-#include "../MapEngines/MapOptimiser.h" 
-#include "../MapEngines/MapOptimiserEssential.h" 
+//#include "GlobalTransfoEstim.h"
+//#include "../MapEngines/MapOptimiser.h"
+//#include "../MapEngines/MapOptimiserEssential.h"
 
 //for fast corner detection
 //#include <opencv/cvaux.h> //for opencv 2.4
-#include <opencv2/opencv.hpp> // for later one
+//#include <opencv2/opencv.hpp> // for later one
 
 
 class MapTracker
 {
 public:
-	MapTracker(){};
+    MapTracker()
+    {
+
+    };
 	~MapTracker(){};
-	MapTracker(Camera *_cam,obMap *_map);
+    MapTracker(Camera *_cam,obMap *_map);
+
 	void Init(Camera *_cam,obMap *_map);
+    void Test(void)
+    {
+        coutGreen << "=====================" << endlGreen;
+        coutGreen << sizeof(relPose) << endlGreen;
+        coutGreen << sizeof(HomogeneousMatrix22) << endlGreen;
+        coutGreen << sizeof(Matrix4f) << endlGreen;
+        coutGreen << sizeof(float) << endlGreen;
+        coutGreen << "=====================" << endlGreen;
+    }
 	
-	//estimate pose that minimizes reprojection error of map onto image
-	//note that color image here is used only to define the color of the reconstructed point cloud for visualization
-	void TrackFrame(cv::Mat &_current_img,cv::Mat *_current_img_col=NULL,bool useCol=false);
-	
-	//get current pose
-	HomogeneousMatrix getPose(){return relPose*myMap->getKF(idrelKF)->getPose();};
-	
-	void updateRelPoseAfterMapOptim(){relPose=myMap->getKF(idrelKF)->getRelativePose();}
-	
-	//get id KF relative
+
+
+
+
 	int getIdRelKF(){return idrelKF;};
-	std::vector<int> &getClosestKFs(){return id_closestKF;};
+    std::vector<int> getClosestKFs()
+    {
+
+        coutGreen << "=====================" << endlGreen;
+        coutGreen << sizeof(relPose) << endlGreen;
+        coutGreen << sizeof(HomogeneousMatrix22) << endlGreen;
+        coutGreen << sizeof(Matrix4f) << endlGreen;
+        coutGreen << sizeof(float) << endlGreen;
+        coutGreen << "=====================" << endlGreen;
+
+
+
+        std::cout << "Address of maptracker: " << this << std::endl;
+
+        std::vector<int> out;
+        std::cout << "Size: " << id_closestKF.size() << std::endl;
+        std::cout << "Address: " << &id_closestKF << std::endl;
+
+        std::cout << sizeof(relPose) << std::endl;
+         std::cout << sizeof(HomogeneousMatrix22) << std::endl;
+
+
+
+
+
+        for (unsigned int i = 0; i < id_closestKF.size(); i++)
+        {
+            int t = id_closestKF[i];
+            out.push_back(t);
+        }
+
+        return out;
+    }
 private:
   
 	//pointers o camera and map
@@ -49,7 +89,7 @@ private:
 	obMap *myMap;
 	
 	//current relative pose between KFcurrent and KFclosest (in map)
-	HomogeneousMatrix relPose;	
+    HomogeneousMatrix22 relPose;
 	
 	int idrelKF;//id of KF relative pose is defined
 	std::vector<int> id_closestKF;//id of current closest KF in map (active window)

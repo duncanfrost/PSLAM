@@ -20,13 +20,13 @@ void KeyFrame::InitMemory()
 	overlapWithLast=1;
 }
 
-KeyFrame::KeyFrame(int _id,cv::Mat &_img,HomogeneousMatrix _pose)
+KeyFrame::KeyFrame(int _id,cv::Mat &_img,HomogeneousMatrix22 _pose)
 {
 	InitMemory();
 	Init(_id,_img,_pose);
 }
 
-void KeyFrame::Init(int _id,cv::Mat &_img,HomogeneousMatrix _pose)
+void KeyFrame::Init(int _id,cv::Mat &_img,HomogeneousMatrix22 _pose)
 {
 	w_To_cam=_pose;
 	id=_id;
@@ -83,7 +83,7 @@ KeyFrame::~KeyFrame()
 }
 
 
-bool CheckNewStereo(std::vector<p_match> &matches,Camera *myCamera,HomogeneousMatrix &KFtoCurrent)
+bool CheckNewStereo(std::vector<p_match> &matches,Camera *myCamera,HomogeneousMatrix22 &KFtoCurrent)
 {
 	if(matches.size()>10)
 	{
@@ -108,7 +108,7 @@ bool CheckNewStereo(std::vector<p_match> &matches,Camera *myCamera,HomogeneousMa
 	return false;
 }
 
-std::vector<uptoscaleFeature> KeyFrame::getGoodFeaturesFromRayIntersection(std::vector<p_match> &matches,Camera *myCamera,HomogeneousMatrix &KFtoCurrent)
+std::vector<uptoscaleFeature> KeyFrame::getGoodFeaturesFromRayIntersection(std::vector<p_match> &matches,Camera *myCamera,HomogeneousMatrix22 &KFtoCurrent)
 {
 	std::vector<uptoscaleFeature> GoodLocalFeatures;
 	for(int i=0;i<matches.size();i++)
@@ -253,7 +253,7 @@ int KeyFrame::indexCandidateFeatureFromVisoId(int idFeaturep)
 	
 }
 
-HomogeneousMatrix KeyFrame::computeRelativeCurrentPoseWithLocalFeatures(Camera *_myCamera)
+HomogeneousMatrix22 KeyFrame::computeRelativeCurrentPoseWithLocalFeatures(Camera *_myCamera)
 {
 	//get list of MeasureTempPointfrom matches and best features
 	std::vector<MeasureTempPoint> measurePoints;
@@ -314,12 +314,12 @@ HomogeneousMatrix KeyFrame::computeRelativeCurrentPoseWithLocalFeatures(Camera *
 			//todo try p+=Dp
 			VectorXf Dp(6);
 			Dp=-1.*(lu.inverse()*Jte);
-			relPose=HomogeneousMatrix(Dp)* relPose;
+            relPose=HomogeneousMatrix22(Dp)* relPose;
 		}
 	}
 	return relPose;
 }
-HomogeneousMatrix KeyFrame::computeRelativeCurrentPoseWithMatchedFeatures(Camera *_myCamera)
+HomogeneousMatrix22 KeyFrame::computeRelativeCurrentPoseWithMatchedFeatures(Camera *_myCamera)
 {
 	//get list of MeasureTempPointfrom matches and best features
 	std::vector<MeasureTempPoint> measurePoints;
@@ -383,13 +383,13 @@ HomogeneousMatrix KeyFrame::computeRelativeCurrentPoseWithMatchedFeatures(Camera
 			//todo try p+=Dp
 			VectorXf Dp(6);
 			Dp=-1.*(lu.inverse()*Jte);
-			relPose=HomogeneousMatrix(Dp)* relPose;
+            relPose=HomogeneousMatrix22(Dp)* relPose;
 		}
 	}
 	return relPose;
 
 }
-HomogeneousMatrix KeyFrame::computeRelativeCurrentPoseWithAllMatches(Camera *_myCamera)
+HomogeneousMatrix22 KeyFrame::computeRelativeCurrentPoseWithAllMatches(Camera *_myCamera)
 {
 	//get list of MeasureTempPointfrom matches and best features
 	std::vector<MeasureTempPoint> measurePoints;
@@ -564,7 +564,7 @@ HomogeneousMatrix KeyFrame::computeRelativeCurrentPoseWithAllMatches(Camera *_my
 			if(!isnan(Dp[0]))
 			{
 			
-				HomogeneousMatrix relPoseNew=HomogeneousMatrix(Dp)* relPose;
+                HomogeneousMatrix22 relPoseNew=HomogeneousMatrix22(Dp)* relPose;
 				
 				float residueAfter=0;
 				float weightTotalAfter=0;
@@ -613,7 +613,7 @@ HomogeneousMatrix KeyFrame::computeRelativeCurrentPoseWithAllMatches(Camera *_my
 	return relPose;
 
 }
-HomogeneousMatrix KeyFrame::RescalePose(HomogeneousMatrix &relPoseNoscale,std::vector<uptoscaleFeature> &NewFeatures,std::vector<uptoscaleFeature> &FilteredNewFeatures,std::vector<uptoscaleFeature> &best_features)
+HomogeneousMatrix22 KeyFrame::RescalePose(HomogeneousMatrix22 &relPoseNoscale,std::vector<uptoscaleFeature> &NewFeatures,std::vector<uptoscaleFeature> &FilteredNewFeatures,std::vector<uptoscaleFeature> &best_features)
 {
 	//rescale relPoseNoscale and features FilteredNewFeatures to match best_features
 	//std::cout<<"FilteredNewFeatures.size() = "<<FilteredNewFeatures.size()<<std::endl;
@@ -685,14 +685,14 @@ HomogeneousMatrix KeyFrame::RescalePose(HomogeneousMatrix &relPoseNoscale,std::v
 		for(int i=0;i<FilteredNewFeatures.size();i++)
 			FilteredNewFeatures[i].depthInRef=CurrentToDesiredScale*FilteredNewFeatures[i].depthInRef;
 		
-		HomogeneousMatrix KFtoCurrent=relPoseNoscale;		
+        HomogeneousMatrix22 KFtoCurrent=relPoseNoscale;
 		KFtoCurrent.set_translation(CurrentToDesiredScale*KFtoCurrent.get_translation());
 		return KFtoCurrent;
 	}
 	else 
 	{
 		//don t know scale, most likely because there has not been enough translation => set t = 0
-		HomogeneousMatrix KFtoCurrent=relPoseNoscale;		
+        HomogeneousMatrix22 KFtoCurrent=relPoseNoscale;
 		KFtoCurrent.set_translation(Vector3f(0,0,0));
 		return KFtoCurrent;
 	}
@@ -720,7 +720,7 @@ int KeyFrame::useNewFrame(cv::Mat *_img_c,Camera *_myCamera)
 	//get 3D if we can
 	//get up to scale Homogeneous matrix from KF to current
 
-	HomogeneousMatrix relPoseNoscale;
+    HomogeneousMatrix22 relPoseNoscale;
 	bool isMotionGood=CheckNewStereo(matchesCurrent,_myCamera,relPoseNoscale);
 	
 	if(isMotionGood)
@@ -856,7 +856,7 @@ int KeyFrame::useNewFrame(cv::Mat *_img_c,Camera *_myCamera)
 	}
 }*/
 
-void KeyFrame::useNeigborForInitLocalStereo(cv::Mat &imgBest,std::vector<p_match> &matches, HomogeneousMatrix &_relPoseNeigb,Camera *_myCamera)
+void KeyFrame::useNeigborForInitLocalStereo(cv::Mat &imgBest,std::vector<p_match> &matches, HomogeneousMatrix22 &_relPoseNeigb,Camera *_myCamera)
 {
 	img_best_pair=imgBest.clone();
   
@@ -1109,10 +1109,10 @@ void uptoscaleFeature::loadFromStream(std::ifstream &fout, KeyFrame *kf0)
 //with alpha*v1 = c1p (p=intersection) and beta*v2=c2p
 //=> c1p+pc2=c1c2
 //express all the variables in frame1
-int reconstructionFromRays(Vector2f mes1,Vector2f mes2,HomogeneousMatrix pose1_2,float &depth1, float &recAngle, bool checkIntersect)
+int reconstructionFromRays(Vector2f mes1,Vector2f mes2,HomogeneousMatrix22 pose1_2,float &depth1, float &recAngle, bool checkIntersect)
 {
-	HomogeneousMatrix pose1;//identity
-	HomogeneousMatrix pose2Inv=pose1_2.inverse();
+    HomogeneousMatrix22 pose1;//identity
+    HomogeneousMatrix22 pose2Inv=pose1_2.inverse();
 	Vector3f centerCam2=pose2Inv.get_translation();
 
 	Vector3f b=centerCam2;
@@ -1181,10 +1181,10 @@ int reconstructionFromRays(Vector2f mes1,Vector2f mes2,HomogeneousMatrix pose1_2
 	return -1;
 }
 
-int reconstructionFromRaysInvDepth(Vector2f mes1,Vector2f mes2,HomogeneousMatrix pose1_2,float &invdepth, float &recAngle)
+int reconstructionFromRaysInvDepth(Vector2f mes1,Vector2f mes2,HomogeneousMatrix22 pose1_2,float &invdepth, float &recAngle)
 {
-	HomogeneousMatrix pose1;//identity
-	HomogeneousMatrix pose2Inv=pose1_2.inverse();
+    HomogeneousMatrix22 pose1;//identity
+    HomogeneousMatrix22 pose2Inv=pose1_2.inverse();
 	Vector3f centerCam2=pose2Inv.get_translation();
 
 	Vector3f b=centerCam2;
@@ -1636,7 +1636,7 @@ Matrix3f invMatrix3fl(Matrix3f &M)
 	return invDet*res;
 	
 }
-void KeyFrame::doMiniBA(std::vector<p_match> &matches,std::vector<uptoscaleFeature> &feats, Camera *myCamera,HomogeneousMatrix &pose,bool useLM)
+void KeyFrame::doMiniBA(std::vector<p_match> &matches,std::vector<uptoscaleFeature> &feats, Camera *myCamera,HomogeneousMatrix22 &pose,bool useLM)
 {
 	float norm0=sqrt(pose.get_translation().squaredNorm());
 	//algebraic solution gives good init
@@ -1818,7 +1818,7 @@ void KeyFrame::doMiniBA(std::vector<p_match> &matches,std::vector<uptoscaleFeatu
 		std::cout<<A<<std::endl;*/
 		//update camera poses in temporary struct New
 		VectorXf Dci=gain*Dc;
-		HomogeneousMatrix poseNew=HomogeneousMatrix(Dci)*pose;
+        HomogeneousMatrix22 poseNew=HomogeneousMatrix22(Dci)*pose;
 		//std::cout<<"Dci = "<<std::endl;
 		//std::cout<<Dci.transpose()<<std::endl;
 		if(isnan(Dci[0]))

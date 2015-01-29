@@ -30,12 +30,12 @@ BundleAdjuster::BundleAdjuster(obMap *_myMap)
 	point_translation_small=1e-5;
 	cam_translation_small=1e-5;
 	goneWrong=false;
-#ifdef USE_OMP_C	
+#ifdef USE_OMP
 	canBeInterrupted=false;
 #endif	
 	gain=DEFAULT_GAIN_GN;
 }
-#ifdef USE_OMP_C	
+#ifdef USE_OMP
 void BundleAdjuster::setMoreImportantStuffToDo(bool *_moreImportantStuffWaiting,omp_lock_t *_lock_check_more_prior)
 {
 	canBeInterrupted=true;
@@ -225,7 +225,7 @@ void BundleAdjuster::optimiseInnerWindow(std::vector<int> &innerWin,int nb_iter,
 				{
 					//get matches:
 					KeyFrame &kfn=*myMap->getKF(neigbor.neighboring_kf);
-					HomogeneousMatrix relPose=kf.getPose()*kfn.getPose().inverse();
+                    HomogeneousMatrix22 relPose=kf.getPose()*kfn.getPose().inverse();
 					neigbor.relative_poses=relPose;
 				}
 			}
@@ -287,7 +287,7 @@ void BundleAdjuster::optimiseInnerWindow(std::vector<int> &innerWin,int nb_iter,
 }
 
 
-void BundleAdjuster::addCamera(HomogeneousMatrix _pose,int _id_main,bool _fixed)
+void BundleAdjuster::addCamera(HomogeneousMatrix22 _pose,int _id_main,bool _fixed)
 {
 	//coutMapping<<"Add Camera "<<_id_main<<endlMapping;
 	BAcamera newCam;
@@ -425,7 +425,7 @@ void BundleAdjuster::OptimisePointPosition(int nb_iter)
 				short &p=mMeasures[m].pt_id;
 				if(mPoints[p].id_optim!=-1)
 				{
-					HomogeneousMatrix &pose=mCams[c].pose;
+                    HomogeneousMatrix22 &pose=mCams[c].pose;
 					
 					//get 3D pose in camera frame
 					Vector3f mapPointsCam=pose*mPoints[p].position;	
@@ -460,7 +460,7 @@ void BundleAdjuster::OptimisePointPosition(int nb_iter)
 			short &p=mMeasures[m].pt_id;
 			if(mPoints[p].id_optim!=-1)
 			{
-				HomogeneousMatrix &pose=mCams[c].pose;
+                HomogeneousMatrix22 &pose=mCams[c].pose;
 				
 				//get 3D pose in camera frame
 				Vector3f mapPointsCam=pose*mPoints[p].position;	
@@ -535,7 +535,7 @@ void BundleAdjuster::OptimisePointPosition(int nb_iter)
 			hasConverged=true;
 			break;
 		}
-#ifdef USE_OMP_C		
+#ifdef USE_OMP
 		if(canBeInterrupted)
 		{
 			omp_set_lock(lock_check_more_prior);
@@ -648,7 +648,7 @@ void BundleAdjuster::BundleAdjustRobust(int nb_iter)
 		{
 			short &c=mMeasures[m].kf_id;
 			short &p=mMeasures[m].pt_id;
-			HomogeneousMatrix &pose=mCams[c].pose;
+            HomogeneousMatrix22 &pose=mCams[c].pose;
 			
 			//get 3D pose in camera frame
 			Vector3f mapPointsCam=pose*mPoints[p].position;	
@@ -677,7 +677,7 @@ void BundleAdjuster::BundleAdjustRobust(int nb_iter)
 		{
 			short &c=mMeasures[m].kf_id;
 			short &p=mMeasures[m].pt_id;
-			HomogeneousMatrix &pose=mCams[c].pose;
+            HomogeneousMatrix22 &pose=mCams[c].pose;
 			
 			//get 3D pose in camera frame
 			Vector3f mapPointsCam=pose*mPoints[p].position;	
@@ -717,7 +717,7 @@ void BundleAdjuster::BundleAdjustRobust(int nb_iter)
 		{
 			short &c=mMeasures[m].kf_id;
 			short &p=mMeasures[m].pt_id;
-			HomogeneousMatrix &pose=mCams[c].pose;
+            HomogeneousMatrix22 &pose=mCams[c].pose;
 			
 			//get 3D pose in camera frame
 			Vector3f mapPointsCam=pose*mPoints[p].position;	
@@ -855,7 +855,7 @@ void BundleAdjuster::BundleAdjustRobust(int nb_iter)
 			{
 				
 				VectorXf Dci=gain*Dc.segment(6*id_opt,6);
-				mCams[c].poseNew=HomogeneousMatrix(Dci)*mCams[c].pose;
+                mCams[c].poseNew=HomogeneousMatrix22(Dci)*mCams[c].pose;
 				
 				if(isnan(Dci[0]))
 				{
@@ -917,7 +917,7 @@ void BundleAdjuster::BundleAdjustRobust(int nb_iter)
 		{
 			short &c=mMeasures[m].kf_id;
 			short &p=mMeasures[m].pt_id;
-			HomogeneousMatrix &pose=mCams[c].poseNew;
+            HomogeneousMatrix22 &pose=mCams[c].poseNew;
 			
 			//get 3D pose in camera frame
 			Vector3f mapPointsCam=pose*mPoints[p].positionNew;	
@@ -967,7 +967,7 @@ void BundleAdjuster::BundleAdjustRobust(int nb_iter)
 			mLMLambda = mLMLambda * mdLambdaFactor;
 			mdLambdaFactor = mdLambdaFactor * 2;
 		}
-#ifdef USE_OMP_C			
+#ifdef USE_OMP
 		if(canBeInterrupted)
 		{
 			omp_set_lock(lock_check_more_prior);
@@ -992,13 +992,13 @@ void BundleAdjuster::BundleAdjustRobust(int nb_iter)
 }
 
 
-HomogeneousMatrix BundleAdjuster::getUpdatedCamPose(int id_main)
+HomogeneousMatrix22 BundleAdjuster::getUpdatedCamPose(int id_main)
 {
 	for(int c=0;c<mCams.size();c++)
 		if(mCams[c].id_main==id_main)return mCams[c].pose;
 		
 	std::cerr<<"BundleAdjuster::getUpdatedCamPose> cam not found"<<endlMapping;
-	return HomogeneousMatrix();//should not happen
+    return HomogeneousMatrix22();//should not happen
 }
 Vector3f BundleAdjuster::getUpdatedPointPosition(int id_kf_main,int id_main)
 {
@@ -1035,7 +1035,7 @@ void BundleAdjuster::BundleAdjust(int nb_iter,bool LM)
 		{
 			short &c=mMeasures[m].kf_id;
 			short &p=mMeasures[m].pt_id;
-			HomogeneousMatrix &pose=mCams[c].pose;
+            HomogeneousMatrix22 &pose=mCams[c].pose;
 			
 			//get 3D pose in camera frame
 			Vector3f mapPointsCam=pose*mPoints[p].position;	
@@ -1174,7 +1174,7 @@ void BundleAdjuster::BundleAdjust(int nb_iter,bool LM)
 			{
 				
 				VectorXf Dci=gain*Dc.segment(6*id_opt,6);
-				mCams[c].poseNew=HomogeneousMatrix(Dci)*mCams[c].pose;
+                mCams[c].poseNew=HomogeneousMatrix22(Dci)*mCams[c].pose;
 				if(isnan(Dci[0]))
 				{
 					//coutErrMapping<<"\tBA: strange, cam update"<< iter <<endlErrMapping;
@@ -1237,7 +1237,7 @@ void BundleAdjuster::BundleAdjust(int nb_iter,bool LM)
 			{
 				short &c=mMeasures[m].kf_id;
 				short &p=mMeasures[m].pt_id;
-				HomogeneousMatrix &pose=mCams[c].poseNew;
+                HomogeneousMatrix22 &pose=mCams[c].poseNew;
 				
 				//get 3D pose in camera frame
 				Vector3f mapPointsCam=pose*mPoints[p].positionNew;	
@@ -1283,7 +1283,7 @@ void BundleAdjuster::BundleAdjust(int nb_iter,bool LM)
 			}
 					
 		}
-#ifdef USE_OMP_C			
+#ifdef USE_OMP
 		if(canBeInterrupted)
 		{
 			omp_set_lock(lock_check_more_prior);
@@ -1321,7 +1321,7 @@ void BundleAdjuster::BundleAdjustNoOptim(int nb_iter)
 		{
 			short &c=mMeasures[m].kf_id;
 			short &p=mMeasures[m].pt_id;
-			HomogeneousMatrix &pose=mCams[c].pose;
+            HomogeneousMatrix22 &pose=mCams[c].pose;
 			
 			//get 3D pose in camera frame
 			Vector3f mapPointsCam=pose*mPoints[p].position;	
@@ -1436,7 +1436,7 @@ void BundleAdjuster::BundleAdjustNoOptim(int nb_iter)
 			{
 				
 				VectorXf Dci=gain*Dc.segment(6*id_opt,6);
-				mCams[c].poseNew=HomogeneousMatrix(Dci)*mCams[c].pose;
+                mCams[c].poseNew=HomogeneousMatrix22(Dci)*mCams[c].pose;
 			}
 		}
 
@@ -1462,7 +1462,7 @@ void BundleAdjuster::BundleAdjustNoOptim(int nb_iter)
 		{
 			short &c=mMeasures[m].kf_id;
 			short &p=mMeasures[m].pt_id;
-			HomogeneousMatrix &pose=mCams[c].poseNew;
+            HomogeneousMatrix22 &pose=mCams[c].poseNew;
 			
 			//get 3D pose in camera frame
 			Vector3f mapPointsCam=pose*mPoints[p].positionNew;	
@@ -1636,7 +1636,7 @@ void BundleAdjuster::BundleAdjustRobust2(int nb_iter)
 		{
 			short &c=mMeasures[m].kf_id;
 			short &p=mMeasures[m].pt_id;
-			HomogeneousMatrix &pose=mCams[c].pose;
+            HomogeneousMatrix22 &pose=mCams[c].pose;
 			
 			//get 3D pose in camera frame
 			Vector3f mapPointsCam=pose*mPoints[p].position;	
@@ -1669,7 +1669,7 @@ void BundleAdjuster::BundleAdjustRobust2(int nb_iter)
 		{
 			short &c=mMeasures[m].kf_id;
 			short &p=mMeasures[m].pt_id;
-			HomogeneousMatrix &pose=mCams[c].pose;
+            HomogeneousMatrix22 &pose=mCams[c].pose;
 			
 			//get 3D pose in camera frame
 			Vector3f mapPointsCam=pose*mPoints[p].position;	
@@ -1709,7 +1709,7 @@ void BundleAdjuster::BundleAdjustRobust2(int nb_iter)
 		{
 			short &c=mMeasures[m].kf_id;
 			short &p=mMeasures[m].pt_id;
-			HomogeneousMatrix &pose=mCams[c].pose;
+            HomogeneousMatrix22 &pose=mCams[c].pose;
 			
 			//get 3D pose in camera frame
 			Vector3f mapPointsCam=pose*mPoints[p].position;	
@@ -1847,7 +1847,7 @@ void BundleAdjuster::BundleAdjustRobust2(int nb_iter)
 			{
 				
 				VectorXf Dci=gain*Dc.segment(6*id_opt,6);
-				mCams[c].poseNew=HomogeneousMatrix(Dci)*mCams[c].pose;
+                mCams[c].poseNew=HomogeneousMatrix22(Dci)*mCams[c].pose;
 				
 				if(isnan(Dci[0]))
 				{
@@ -1909,7 +1909,7 @@ void BundleAdjuster::BundleAdjustRobust2(int nb_iter)
 		{
 			short &c=mMeasures[m].kf_id;
 			short &p=mMeasures[m].pt_id;
-			HomogeneousMatrix &pose=mCams[c].poseNew;
+            HomogeneousMatrix22 &pose=mCams[c].poseNew;
 			
 			//get 3D pose in camera frame
 			Vector3f mapPointsCam=pose*mPoints[p].positionNew;	
@@ -1959,7 +1959,7 @@ void BundleAdjuster::BundleAdjustRobust2(int nb_iter)
 			mLMLambda = mLMLambda * mdLambdaFactor;
 			mdLambdaFactor = mdLambdaFactor * 2;
 		}
-#ifdef USE_OMP_C			
+#ifdef USE_OMP
 		if(canBeInterrupted)
 		{
 			omp_set_lock(lock_check_more_prior);

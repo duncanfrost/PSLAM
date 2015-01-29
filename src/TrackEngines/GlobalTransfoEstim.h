@@ -54,7 +54,7 @@ Vector3f estimateRotationPyr(cv::Mat &T,cv::Mat &I, Camera* _cam,int pyr_lvl=0,i
 Vector2f applySE2Tz(Vector2f pos,Vector4f w,Camera* _cam);
 Vector2f applySE2TzPyr(Vector2f pos,Vector4f w,Camera* _cam,int _lvl);//apply same transformation but in lvl of pyramid
 cv::Mat applySE2TzImage(cv::Mat &Img,Vector4f p,Camera* _cam);
-HomogeneousMatrix SE2TztoSO3(Vector4f _p,float mean_depth,Camera* _cam);//SE3 + translation along z (for relocalization)
+HomogeneousMatrix22 SE2TztoSO3(Vector4f _p,float mean_depth,Camera* _cam);//SE3 + translation along z (for relocalization)
 //SE3 + translation along z (for relocalization) return normalized final_residue
 float estimateTzPyr(cv::Mat &T,cv::Mat &I, Camera* _cam,int pyr_lvl=0,int modulo=1,int _max_iter=50);
 float estimateSE2TzPyr(cv::Mat &T,cv::Mat &I, Camera* _cam,Vector4f &res,int pyr_lvl=0,int modulo=1,int _max_iter=50);

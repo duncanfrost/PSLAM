@@ -9,6 +9,8 @@
 #include "../src/TrackEngines/MapTracker.h"
 #include "../src/Primitives/obMap.h"
 #include "../src/MapEngines/BundleAdjuster.h"
+#include "../src/MapEngines/GraphFunctions.h"
+#include "../src/MapEngines/MapOptimiser.h"
 
 
 #include <Eigen/Core>
@@ -38,7 +40,7 @@ MapTracker *mapTracker;
 	
 
 int id_current_frame=0;
-HomogeneousMatrix current_estimated_pose;
+HomogeneousMatrix22 current_estimated_pose;
 
 PlottingWindow *PlotWindow;
 
@@ -107,7 +109,7 @@ int main(int argc, char** argv)
 	mMapWindow->addCamera(&current_estimated_pose,Vector3f(1.,0.,0.));
 	
 	//HomogeneousMatrix moveCam(0.,3.,3.,1.0,0,0);
-	HomogeneousMatrix moveCam(0.,3.,3.,1.0,0,0);
+    HomogeneousMatrix22 moveCam(0.,3.,3.,1.0,0,0);
 	mMapWindow->setCameraPose(moveCam);
 	
 	std::cout<<"Start"<<std::endl;
@@ -135,8 +137,8 @@ void Idle(void)
 		cv::Mat &current_img_BW=*myVideoSource->GetFramePointerBW();
 
 		//process it
-		mapTracker->TrackFrame(current_img_BW);
-		current_estimated_pose=mapTracker->getPose();//update current camera pose for map viewer
+        //mapTracker->TrackFrame(current_img_BW);
+        //current_estimated_pose=mapTracker->getPose();//update current camera pose for map viewer
 		
 		mMapWindow->showClosestKF(mapTracker->getIdRelKF());
 		mMapWindow->showActiveKF(mapTracker->getClosestKFs());
@@ -330,45 +332,6 @@ void removeUnusedPoints()
 }
 void processNormalKeysPlus(unsigned char key, int x, int y)
 {
-	switch(key) {
-
-		case 'c':
-			//try change scale: x2 last KF
-			doClassicMinFeatureVariance();
-			break;
-		case 'b'://do bundle adjust on last KF
-			doClassicBA();
-			break;
-
-		case 'm':
-			Map_Estim.saveToFile("map.dat");
-			break;
-
-		case 's':
-			//try change scale: x2 last KF
-			updateScaleLastKeyFrame();
-			mapTracker->updateRelPoseAfterMapOptim();
-			current_estimated_pose=mapTracker->getPose();
-			break;
-		case 'd':
-			//try change scale: x2 last KF
-			updateScaleLastKeyFrame2();
-			mapTracker->updateRelPoseAfterMapOptim();
-			current_estimated_pose=mapTracker->getPose();
-			break;
-		case 'r':
-			removeUnusedPoints();
-			break;
-		case ' ':
-			pause_process=!pause_process;
-			break;
-		case 27://esc
-			//Map_Estim.stopThread();
-			delete mapTracker;
-			delete VisuEngine;
-			exit(0);
-			break;
-	}
 
 }
 

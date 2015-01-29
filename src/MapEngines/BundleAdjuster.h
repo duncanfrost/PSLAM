@@ -17,8 +17,8 @@
 
 struct BAcamera
 {
-	HomogeneousMatrix pose;//current pose
-	HomogeneousMatrix poseNew;//updated pose, copied to pose if improve reproj error
+	HomogeneousMatrix22 pose;//current pose
+	HomogeneousMatrix22 poseNew;//updated pose, copied to pose if improve reproj error
 	
 	int nb_measures;//number of points of bundle visible in cam
 	
@@ -68,11 +68,11 @@ public:
 	
 	
 	~BundleAdjuster(){};
-#ifdef USE_OMP_C	
+#ifdef USE_OMP	
 	void setMoreImportantStuffToDo(bool *_moreImportantStuffWaiting,omp_lock_t *_lock_check_more_prior);
 #endif	
 	//fill Bundle
-	void addCamera(HomogeneousMatrix _pose,int _id,bool _fixed);
+	void addCamera(HomogeneousMatrix22 _pose,int _id,bool _fixed);
 	void addPoint(Vector3f _position,int _id_kf_pt,int _id,float _recAngle);
 	//addMeasure should be called after addCamera and addPoint
 	void addMeasure(short _idKFmeas,short _idKFPoint,short _idPoint,Vector2f coord,char _lvl,short id_feat);
@@ -99,7 +99,7 @@ public:
 	int IdOptimToIdBA(int i);
 	
 	//return updated value
-	HomogeneousMatrix getUpdatedCamPose(int id_main);
+	HomogeneousMatrix22 getUpdatedCamPose(int id_main);
 	Vector3f getUpdatedPointPosition(int id_kf_main,int id_main);
 	
 	//return resulting outliers
@@ -147,7 +147,7 @@ private:
 	bool goneWrong;
 	
 	//interruption variables (if more important task to be done)
-#ifdef USE_OMP_C
+#ifdef USE_OMP
 	bool canBeInterrupted;
 	omp_lock_t *lock_check_more_prior;
 	bool *moreImportantStuffWaiting;

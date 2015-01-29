@@ -28,7 +28,7 @@ public:
 	void optimiseMapPoints(std::vector<int> &_innerWindowKFs);
 	
 	//get optimal relative pose and scale between two keyframes and information matrix resulting for the alignment of theor local features
-	void getRelativePoseAndScale(int _kf1,int _kf2,float &optRelScale,HomogeneousMatrix &optRelPose,float &infoScale,MatrixXf &infoPose);
+	void getRelativePoseAndScale(int _kf1,int _kf2,float &optRelScale,HomogeneousMatrix22 &optRelPose,float &infoScale,MatrixXf &infoPose);
 
 private:
 	//map to be optimised

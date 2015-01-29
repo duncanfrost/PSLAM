@@ -18,7 +18,7 @@ void Idle(void) ;
 void processNormalKeys(unsigned char key, int x, int y);
 void addDrawFunction(void) ;
 void useNewMatches(std::vector<p_match> &_matchesCurrent);
-void EstimateCurrentPose(std::vector<p_match> &_matchesCurrent,HomogeneousMatrix &relPoseBA);
+void EstimateCurrentPose(std::vector<p_match> &_matchesCurrent,HomogeneousMatrix22 &relPoseBA);
 std::vector<p_match> matchFeatures(cv::Mat &_img);
 
 //Visualization
@@ -29,7 +29,7 @@ VideoSourceLiveCV *myVideoSource;
 Camera myCamera;//camera object, calibration ...
 
 //reference
-HomogeneousMatrix PoseRef;
+HomogeneousMatrix22 PoseRef;
 	
 
 //reference
@@ -55,14 +55,14 @@ int nb_feat_ref;
 float min_idepth,max_idepth;
 std::vector<PointInvDepth> invDepthEstim;
 int nb_kf=0;
-HomogeneousMatrix PoseEstim[nb_kf_max];
+HomogeneousMatrix22 PoseEstim[nb_kf_max];
 int DoMiniBA(std::vector<int> &fix_kf,std::vector<int> &fix_pt);
 int optimCamPose(std::vector<int> &ptToUse);
 int optimPointPose();
 
-HomogeneousMatrix poseEstimFromMap;
+HomogeneousMatrix22 poseEstimFromMap;
 
-Vector2f ProjInvDepthPoint(PointInvDepth &pt,HomogeneousMatrix &pose)
+Vector2f ProjInvDepthPoint(PointInvDepth &pt,HomogeneousMatrix22 &pose)
 {
 	Vector3f coord_homog=toHomogeneous(pt.meterCoord);
 	Vector3f rotCoordPlusTrans=pose.get_rotation()*coord_homog+pt.invDepth*pose.get_translation();
@@ -121,7 +121,7 @@ int main(int argc, char** argv)
 	
 	//HomogeneousMatrix moveCam(0,0.8,0.8,0.7,0,0);
 	//HomogeneousMatrix moveCam(0,2.1,2.1,2.0,0,0);
-	HomogeneousMatrix moveCam;
+	HomogeneousMatrix22 moveCam;
 	moveCam.TranslateZ(-0.3);
 	moveCam.TranslateY(-0.5);
 	moveCam.RotateX(-45);
@@ -164,7 +164,7 @@ void useNewMatches(std::vector<p_match> &_matchesCurrent)
 		nb_kf++;
 	
 		//check if algebraic decomposition of fundamental gives better reprojection error
-		HomogeneousMatrix relPoseAlgeb;
+		HomogeneousMatrix22 relPoseAlgeb;
 		//bool isMotionGood=CheckNewStereo(_matchesCurrentBucket,&myCamera,relPoseAlgeb);
 		bool isMotionGood=CheckNewStereo(_matchesCurrent,&myCamera,relPoseAlgeb);
 		if(isMotionGood)
@@ -173,7 +173,7 @@ void useNewMatches(std::vector<p_match> &_matchesCurrent)
 			relPoseAlgeb.set_translation(0.1*relPoseAlgeb.get_translation());
 			
 			//get pose current from min reprojection
-			HomogeneousMatrix relPoseBA;
+			HomogeneousMatrix22 relPoseBA;
 			EstimateCurrentPose(_matchesCurrent,relPoseBA);
 			poseEstimFromMap=relPoseBA;
 
@@ -374,7 +374,7 @@ int DoMiniBA(std::vector<int> &fix_kf,std::vector<int> &fix_pt)
 	float mLMLambda = 0.0001;//before LevMarConstant
 	float mdLambdaFactor = 2.0;	
 	
-	HomogeneousMatrix relPoseEstim[nb_kf];
+	HomogeneousMatrix22 relPoseEstim[nb_kf];
 	for(int k=0;k<nb_kf;k++)
 	{
 		relPoseEstim[k]=PoseEstim[k]*PoseRef.inverse();
@@ -702,7 +702,7 @@ int DoMiniBA(std::vector<int> &fix_kf,std::vector<int> &fix_pt)
 		VectorXf Dz_all(nbPointsToUpdate);
 		Dz_all=-HxxInvJtp-HxxInvHxp*Dc;
 		
-		HomogeneousMatrix newRelPoseEstim[nb_kf];
+		HomogeneousMatrix22 newRelPoseEstim[nb_kf];
 		for(int k=0;k<nb_kf;k++)newRelPoseEstim[k]=relPoseEstim[k];
 		  
 		for(int k=0;k<nbCamsToUpdate;k++)
@@ -713,8 +713,8 @@ int DoMiniBA(std::vector<int> &fix_kf,std::vector<int> &fix_pt)
 			//std::cout<<"Dci["<<k<<"] = "<<Dci<<std::endl;
 			//newRelPoseEstim[k]=HomogeneousMatrix(Dci)*relPoseEstim[k];
 			//use rotation in compositional and translkation in additional
-			newRelPoseEstim[id_glob].set_rotation(HomogeneousMatrix(Dci).get_rotation()*relPoseEstim[id_glob].get_rotation());
-			newRelPoseEstim[id_glob].set_translation(HomogeneousMatrix(Dci).get_translation()+relPoseEstim[id_glob].get_translation());
+			newRelPoseEstim[id_glob].set_rotation(HomogeneousMatrix22(Dci).get_rotation()*relPoseEstim[id_glob].get_rotation());
+			newRelPoseEstim[id_glob].set_translation(HomogeneousMatrix22(Dci).get_translation()+relPoseEstim[id_glob].get_translation());
 		}
 
 		//update point coord and depths
@@ -810,7 +810,7 @@ int DoMiniBA(std::vector<int> &fix_kf,std::vector<int> &fix_pt)
 		PoseEstim[k]=relPoseEstim[k]*PoseRef;
 }
 
-void EstimateCurrentPose(std::vector<p_match> &_matchesCurrent,HomogeneousMatrix &relPose)
+void EstimateCurrentPose(std::vector<p_match> &_matchesCurrent,HomogeneousMatrix22 &relPose)
 {
 	int nb_iter=30;
 	float mLMLambda = 0.0001;//before LevMarConstant
@@ -912,7 +912,7 @@ void EstimateCurrentPose(std::vector<p_match> &_matchesCurrent,HomogeneousMatrix
 		if(!isnan(Dp[0]))
 		{
 		
-			HomogeneousMatrix relPoseNew=HomogeneousMatrix(Dp)* relPose;
+			HomogeneousMatrix22 relPoseNew=HomogeneousMatrix22(Dp)* relPose;
 			
 			float residueAfter=0;
 			float weightTotalAfter=0;
@@ -961,7 +961,7 @@ int optimCamPose(std::vector<int> &ptToUse)
 	float mLMLambda = 0.0001;//before LevMarConstant
 	float mdLambdaFactor = 2.0;	
 	
-	HomogeneousMatrix relPoseEstim[nb_kf];
+	HomogeneousMatrix22 relPoseEstim[nb_kf];
 	for(int k=0;k<nb_kf;k++)
 	{
 		relPoseEstim[k]=PoseEstim[k]*PoseRef.inverse();
@@ -1120,7 +1120,7 @@ int optimCamPose(std::vector<int> &ptToUse)
 			Hpp[k](i,i)=(1.+mLMLambda)*Hpp[k](i,i);	
 
 		
-		HomogeneousMatrix newRelPoseEstim[nb_kf];
+		HomogeneousMatrix22 newRelPoseEstim[nb_kf];
 		for(int k=0;k<nb_kf;k++)newRelPoseEstim[k]=relPoseEstim[k];
 		  
 		for(int k=0;k<nbCamsToUpdate;k++)
@@ -1132,8 +1132,8 @@ int optimCamPose(std::vector<int> &ptToUse)
 			//std::cout<<"Dci["<<k<<"] = "<<Dci<<std::endl;
 			//newRelPoseEstim[k]=HomogeneousMatrix(Dci)*relPoseEstim[k];
 			//use rotation in compositional and translkation in additional
-			newRelPoseEstim[id_glob].set_rotation(HomogeneousMatrix(Dci).get_rotation()*relPoseEstim[id_glob].get_rotation());
-			newRelPoseEstim[id_glob].set_translation(HomogeneousMatrix(Dci).get_translation()+relPoseEstim[id_glob].get_translation());
+			newRelPoseEstim[id_glob].set_rotation(HomogeneousMatrix22(Dci).get_rotation()*relPoseEstim[id_glob].get_rotation());
+			newRelPoseEstim[id_glob].set_translation(HomogeneousMatrix22(Dci).get_translation()+relPoseEstim[id_glob].get_translation());
 		}
 		
 		
@@ -1200,7 +1200,7 @@ int optimPointPose()
 	float mLMLambda = 0.0001;//before LevMarConstant
 	float mdLambdaFactor = 2.0;	
 	
-	HomogeneousMatrix relPoseEstim[nb_kf];
+	HomogeneousMatrix22 relPoseEstim[nb_kf];
 	for(int k=0;k<nb_kf;k++)
 	{
 		relPoseEstim[k]=PoseEstim[k]*PoseRef.inverse();

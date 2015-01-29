@@ -12,7 +12,7 @@ void Idle(void) ;
 void processNormalKeys(unsigned char key, int x, int y);
 void addDrawFunction(void) ;
 void useNewMatches(std::vector<p_match> &_matchesCurrent,std::vector<p_match> &_matchesCurrentBucket);
-void EstimateCurrentPose(std::vector<p_match> &_matchesCurrent,HomogeneousMatrix &relPoseBA);
+void EstimateCurrentPose(std::vector<p_match> &_matchesCurrent,HomogeneousMatrix22 &relPoseBA);
 
 //Visualization
 VisualisationModule *VisuEngine;
@@ -22,7 +22,7 @@ VideoSourceLiveCV *myVideoSource;
 Camera myCamera;//camera object, calibration ...
 
 //reference
-HomogeneousMatrix PoseRef;
+HomogeneousMatrix22 PoseRef;
 cv::Mat imgRef;	
 
 cv::Mat imgDisplay;	

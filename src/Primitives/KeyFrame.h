@@ -79,7 +79,7 @@ struct NeigbourKFNew
 	//not very yet....
 	float relative_scale;//scale to apply to neigbor to match this
 	float Informationscale;
-	HomogeneousMatrix relative_poses; //relative pose from neigbor to this using this scale
+	HomogeneousMatrix22 relative_poses; //relative pose from neigbor to this using this scale
 	MatrixXf InformationMatrixPose;
 	
 		//io functions
@@ -136,8 +136,8 @@ class KeyFrame
 public:
 	KeyFrame();
 	void InitMemory();
-	KeyFrame(int id,cv::Mat &_img,HomogeneousMatrix _pose);
-	void Init(int id,cv::Mat &_img,HomogeneousMatrix _pose);
+	KeyFrame(int id,cv::Mat &_img,HomogeneousMatrix22 _pose);
+	void Init(int id,cv::Mat &_img,HomogeneousMatrix22 _pose);
 	~KeyFrame();	
 	
 	//init matching tools
@@ -147,28 +147,28 @@ public:
 	//matching current image with KF providing coarse rotation transformation between kf and previous image
 	int useNewFrame(cv::Mat *_img_c,Camera *_myCamera);
 	//estimate 3d features from relative position and set of matches
-	std::vector<uptoscaleFeature> getGoodFeaturesFromRayIntersection(std::vector<p_match> &matches,Camera *myCamera,HomogeneousMatrix &KFtoCurrent);	
+	std::vector<uptoscaleFeature> getGoodFeaturesFromRayIntersection(std::vector<p_match> &matches,Camera *myCamera,HomogeneousMatrix22 &KFtoCurrent);	
 	//do bundle adjustment to refine algebraic solution
 	//for now only use in Testing Virtual Scene (when put considerable image noise algebraic solution is far from refined one)
 	void doMiniBA(Camera *myCamera){doMiniBA(best_matches,best_features,myCamera,bestRelPose);};
-	void doMiniBA(std::vector<p_match> &matches,std::vector<uptoscaleFeature> &feats, Camera *myCamera,HomogeneousMatrix &poseRel,bool useLM=false);
+	void doMiniBA(std::vector<p_match> &matches,std::vector<uptoscaleFeature> &feats, Camera *myCamera,HomogeneousMatrix22 &poseRel,bool useLM=false);
 	//check if depth is consistent in new stereo
 	std::vector<uptoscaleFeature> filterWithDepthConsistancy(std::vector<uptoscaleFeature> &GoodFeatures1);
 	//get fundamental matrix score and average reconstruction angle of 3d points
 	float getFundamentalMatrixScore(std::vector<uptoscaleFeature> &GoodFeatures2,float &_avr_angle);
 	//use 3d features
-	HomogeneousMatrix RescalePose(HomogeneousMatrix &KFtoCurrentnoscale,std::vector<uptoscaleFeature> &GoodFeatures2,std::vector<uptoscaleFeature> &GoodFeatures1,std::vector<uptoscaleFeature> &best_features);
+	HomogeneousMatrix22 RescalePose(HomogeneousMatrix22 &KFtoCurrentnoscale,std::vector<uptoscaleFeature> &GoodFeatures2,std::vector<uptoscaleFeature> &GoodFeatures1,std::vector<uptoscaleFeature> &best_features);
 
 	//initialisation of local 3d using one neigbor keyframe: match between neigbor and current frame already done
 	//as well as 3D relative pose estimation => use inverse of those to init best fundamental and bestFeatures
-	void useNeigborForInitLocalStereo(cv::Mat &imgBest,std::vector<p_match> &matches, HomogeneousMatrix &_relPoseNeigb,Camera *_myCamera);
+	void useNeigborForInitLocalStereo(cv::Mat &imgBest,std::vector<p_match> &matches, HomogeneousMatrix22 &_relPoseNeigb,Camera *_myCamera);
 	//void displayMatchc(int i);
 
 	//##################################################################
 	//Things that have to do with map:		
 	//pose of the keyFrame
-	void setPose(HomogeneousMatrix _w_To_cam){w_To_cam.Init(_w_To_cam);};
-	HomogeneousMatrix getPose(){return w_To_cam;};
+	void setPose(HomogeneousMatrix22 _w_To_cam){w_To_cam.Init(_w_To_cam);};
+	HomogeneousMatrix22 getPose(){return w_To_cam;};
 	
 	//id 
 	void setId(int _id){id=_id;};
@@ -193,8 +193,8 @@ public:
 	void clearLocalBestFeatures(){best_features.clear();};
 	int indexCandidateFeatureFromVisoId(int idFeaturep);
 	int getNumberOfFeatureMatched();
-	HomogeneousMatrix getBestRelPose(){return bestRelPose;};
-	void setBestRelPose(HomogeneousMatrix _h){bestRelPose=_h;};
+	HomogeneousMatrix22 getBestRelPose(){return bestRelPose;};
+	void setBestRelPose(HomogeneousMatrix22 _h){bestRelPose=_h;};
 	cv::Mat &getBestImgPair(){return img_best_pair;};
 	std::vector<p_match> *getBestLocalMatches(){return &best_matches;};
 	void setBestLocalMatches(std::vector<p_match> &_bestM){best_matches=_bestM;};
@@ -216,14 +216,14 @@ public:
 	//##################################################################
 	//Things that have to do with tracker:	
 	//get relative pose estimate with lastely seen image
-	HomogeneousMatrix getRelativePose(){return relPose;};
-	void setRelativePose(HomogeneousMatrix &_p){relPose=_p;};
-	void setRelativePosePrevious(HomogeneousMatrix &_p){relPosePrevious=_p;};
+	HomogeneousMatrix22 getRelativePose(){return relPose;};
+	void setRelativePose(HomogeneousMatrix22 &_p){relPose=_p;};
+	void setRelativePosePrevious(HomogeneousMatrix22 &_p){relPosePrevious=_p;};
 
 	//estimate relative pose of last matched frame using matches and best stereo
-	HomogeneousMatrix computeRelativeCurrentPoseWithLocalFeatures(Camera *_myCamera);		
-	HomogeneousMatrix computeRelativeCurrentPoseWithMatchedFeatures(Camera *_myCamera);		
-	HomogeneousMatrix computeRelativeCurrentPoseWithAllMatches(Camera *_myCamera);		
+	HomogeneousMatrix22 computeRelativeCurrentPoseWithLocalFeatures(Camera *_myCamera);		
+	HomogeneousMatrix22 computeRelativeCurrentPoseWithMatchedFeatures(Camera *_myCamera);		
+	HomogeneousMatrix22 computeRelativeCurrentPoseWithAllMatches(Camera *_myCamera);		
 
 	//get last matches
 	int getLastNumberMatches(){return matchesCurrent.size();};
@@ -258,7 +258,7 @@ private:
 	int id;
   
 	//bool fixed;
-	HomogeneousMatrix w_To_cam;
+	HomogeneousMatrix22 w_To_cam;
 	
 	//current camera rotation
 	//Vector3f rotation;
@@ -296,14 +296,14 @@ private:
 	bool localBestFeaturesHaveChanged; 
 	
 	//lastely estimated relative pose between current frame and Keyframe, coarse estim from fundamental matrix then rescale, then can be refined
-	HomogeneousMatrix relPose;
+	HomogeneousMatrix22 relPose;
 	//last pose estimated by tracker
-	HomogeneousMatrix relPosePrevious;
+	HomogeneousMatrix22 relPosePrevious;
 	
 	//info resulting from best stereo
 	cv::Mat img_best_pair;
 	float best_score_fundamental;
-	HomogeneousMatrix bestRelPose;
+	HomogeneousMatrix22 bestRelPose;
 	std::vector<p_match> best_matches;
 	std::vector<uptoscaleFeature> best_features;
 	
@@ -320,11 +320,11 @@ private:
 //search for two unknown : alpha and beta so that alpha*v1-beta*v2=c1c2
 //with alpha*v1 = c1p (p=intersection) and beta*v2=c2p
 //=> c1p+pc2=c1c2
-int reconstructionFromRays(Vector2f mes1,Vector2f mes2,HomogeneousMatrix pose1_2,float &depth1, float &recAngle, bool checkIntersect=true);
-int reconstructionFromRaysInvDepth(Vector2f mes1,Vector2f mes2,HomogeneousMatrix pose1_2,float &invdepth, float &recAngle);//return 0 if points at infinity
+int reconstructionFromRays(Vector2f mes1,Vector2f mes2,HomogeneousMatrix22 pose1_2,float &depth1, float &recAngle, bool checkIntersect=true);
+int reconstructionFromRaysInvDepth(Vector2f mes1,Vector2f mes2,HomogeneousMatrix22 pose1_2,float &invdepth, float &recAngle);//return 0 if points at infinity
 
 //check if new stereo that we have is better than what we had so far
-bool CheckNewStereo(std::vector<p_match> &matches,Camera *_myCamera,HomogeneousMatrix &KFtoCurrent);
+bool CheckNewStereo(std::vector<p_match> &matches,Camera *_myCamera,HomogeneousMatrix22 &KFtoCurrent);
 
 //do bundle adjustment to refine algebraic solution
 //void doMiniBA(std::vector<p_match> &matches,Camera *myCamera,HomogeneousMatrix &poseRel);

@@ -18,8 +18,8 @@ class SimuWindow:public MotherWindow
 	void setEvents();
 	
 	//set the position of the camera from which map is viewed
-	void setCameraPose(HomogeneousMatrix _cHc2);
-	void moveCamera(HomogeneousMatrix _cHc2);
+	void setCameraPose(HomogeneousMatrix22 _cHc2);
+	void moveCamera(HomogeneousMatrix22 _cHc2);
 	
 	//set velocity of camera for keyboard control
 	void set_velocity_translation(float _f);
@@ -27,7 +27,7 @@ class SimuWindow:public MotherWindow
 	void setLight();
 	
 	//get current data
-	HomogeneousMatrix getCurrentPose(){return displayedPose;};
+	HomogeneousMatrix22 getCurrentPose(){return displayedPose;};
 	cv::Mat &getCurrentImage(){return current_img;};
 	cv::Mat &getCurrentImageBW(){return current_img_BW;};
 	cv::Mat &getCurrentDepth(){return current_img_Z;};
@@ -44,7 +44,7 @@ class SimuWindow:public MotherWindow
 	 objloader obj;
 	 
 	 //current output data
-	 HomogeneousMatrix displayedPose;
+	 HomogeneousMatrix22 displayedPose;
 	 cv::Mat current_img;
 	 cv::Mat current_img_BW;
 	 cv::Mat current_img_Z;

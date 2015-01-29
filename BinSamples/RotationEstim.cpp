@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 	cv::imwrite("rotEst.jpg",Imgtest);
 	
 
-	HomogeneousMatrix Hest=SE2TztoSO3(pEst,1,&myCamera);
+    HomogeneousMatrix22 Hest=SE2TztoSO3(pEst,1,&myCamera);
 	std::cout<<"estimed transfo = "<<Hest.get_p().transpose()<<std::endl;
 	timer.stop();
 

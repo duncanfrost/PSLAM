@@ -38,7 +38,7 @@ MapTracker *mapTracker;
 	
 
 int id_current_frame=0;
-HomogeneousMatrix current_estimated_pose;
+HomogeneousMatrix22 current_estimated_pose;
 
 
 int main(int argc, char** argv)
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 	mMapWindow->addCamera(&current_estimated_pose,Vector3f(1.,0.,0.));
 	
 	//HomogeneousMatrix moveCam(0.,3.,3.,1.0,0,0);
-	HomogeneousMatrix moveCam(0.,-3.,3.,-1.0,0,0);
+    HomogeneousMatrix22 moveCam(0.,-3.,3.,-1.0,0,0);
 	mMapWindow->setCameraPose(moveCam);
 
 	
@@ -98,8 +98,8 @@ void Idle(void)
 	if(!pause_process)
 	{
 		//mapTracker->TrackFrame(current_img_BW);
-		mapTracker->TrackFrame(current_img_BW,&mSimuWindow->getCurrentImage(),true);
-		current_estimated_pose=mapTracker->getPose();//update current camera pose for map viewer
+//		mapTracker->TrackFrame(current_img_BW,&mSimuWindow->getCurrentImage(),true);
+    //	current_estimated_pose=mapTracker->getPose();//update current camera pose for map viewer
 	
 		mMapWindow->showClosestKF(mapTracker->getIdRelKF());
 		mMapWindow->showActiveKF(mapTracker->getClosestKFs());

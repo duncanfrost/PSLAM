@@ -5,7 +5,7 @@
 namespace SimuWindowStuff
 {
 //pose from which map is displayed
-HomogeneousMatrix currentCamPose;
+HomogeneousMatrix22 currentCamPose;
 void keyboard_process(unsigned char key, int x, int y);
 void mouse_process(int button, int state, int x, int y);
 void motion_process(int x, int y);
@@ -226,11 +226,11 @@ void SimuWindowStuff::motion_process(int x, int y)
 		(*VisuWindowNs::mImageWinStatic[idS].processMouseActiveMotion_fct)(x,y);   
     
 }
-void SimuWindow::moveCamera(HomogeneousMatrix _cHc2)
+void SimuWindow::moveCamera(HomogeneousMatrix22 _cHc2)
 {
 	currentCamPose=_cHc2*currentCamPose;
 }
-void SimuWindow::setCameraPose(HomogeneousMatrix _cHc2)
+void SimuWindow::setCameraPose(HomogeneousMatrix22 _cHc2)
 {
 	currentCamPose=_cHc2;	
 }

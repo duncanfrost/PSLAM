@@ -30,22 +30,22 @@ class MapWindow:public MotherWindow
 	void prepare_draw();
 	void setEvents();
 	
-	void addCamera(HomogeneousMatrix *_camPose,Vector3f _col,float _lineSize=1.);
+    void addCamera(HomogeneousMatrix22 *_camPose,Vector3f _col,float _lineSize=1.);
 	void addPointCloud(std::vector<Vector3f> *_map);
 	void addPointCloud(std::vector<PointInvDepth> *_map){pointInvClouds.push_back(_map);};
 	void addMap(obMap *_map);//if several maps are added then use first one as GT
 	
 	//set the position of the camera from which map is viewed
-	void setCameraPose(HomogeneousMatrix _cHc2);
-	void moveCamera(HomogeneousMatrix _cHc2);
-	HomogeneousMatrix getCameraPose();
+    void setCameraPose(HomogeneousMatrix22 _cHc2);
+    void moveCamera(HomogeneousMatrix22 _cHc2);
+    HomogeneousMatrix22 getCameraPose();
 	
 	//set velocity of camera for keyboard control
 	void set_velocity_translation(float _f);
 	void set_camera_drawn_size(float _f);
 	
 	void showClosestKF(int i){closestKF=i;};
-	void showActiveKF(std::vector<int> &_activeKF){activeKF=_activeKF;};	
+    void showActiveKF(std::vector<int> _activeKF){activeKF=_activeKF;};
 	
 	void showTextures(){b_showTextures=!b_showTextures;};
 	void showFeatureConnections(){b_showFeatureConnections=!b_showFeatureConnections;};
@@ -58,7 +58,7 @@ class MapWindow:public MotherWindow
 	 Camera *myCamera;
 	 
 	//list of cameras poses to display
-	std::vector<HomogeneousMatrix*> cameraPoses;
+    std::vector<HomogeneousMatrix22*> cameraPoses;
 	std::vector<Vector3f> colCamera;
 	std::vector<float> lineSizeCamera;
 	

@@ -11,6 +11,7 @@
 #include "../src/MapEngines/BundleAdjuster.h"
 #include "../src/MapEngines/MapOptimiserEssential.h"
 #include "../src/MapEngines/PoseGraphOpt.h"
+#include "../src/MapEngines/MapOptimiser.h"
 
 #include <Eigen/Core>
 using namespace Eigen;
@@ -46,7 +47,7 @@ MapTracker *mapTracker;
 cv::Mat ImgDisplayMatch;
 
 int id_current_frame=0;
-HomogeneousMatrix current_estimated_pose;
+HomogeneousMatrix22 current_estimated_pose;
 
 int main(int argc, char** argv)
 {
@@ -73,7 +74,7 @@ int main(int argc, char** argv)
 	Map_Estim.getKF(0)->getImg_p(0).copyTo(imageKfDisp);
 	
 	//move kf 0 to Id
-	HomogeneousMatrix pose0=Map_Estim.getKF(0)->getPose();
+    HomogeneousMatrix22 pose0=Map_Estim.getKF(0)->getPose();
 	for(int i=0;i<Map_Estim.getNbKeyFrames();i++)
 	{
 		Map_Estim.getKF(i)->setPose(pose0.inverse()*Map_Estim.getKF(i)->getPose());
@@ -115,7 +116,7 @@ int main(int argc, char** argv)
 	//HomogeneousMatrix moveCam(0.,3.,3.,1.0,0,0);
 	//HomogeneousMatrix moveCam(0.,3.,3.,1.0,0,0);
 	//mMapWindow->setCameraPose(moveCam);
-	HomogeneousMatrix moveCam(-0.582611, -1.76823,  1.67988, -1.48444, 0.122459, 0.178899);
+    HomogeneousMatrix22 moveCam(-0.582611, -1.76823,  1.67988, -1.48444, 0.122459, 0.178899);
 	mMapWindow->setCameraPose(moveCam);
 	
 	std::cout<<"##################################################################"<<std::endl;
@@ -462,7 +463,7 @@ void disturb()
 	for(int i=0;i<3;i++)poseNoise[i+3]+=0.05*((double)rand()/(double)RAND_MAX-0.5);
 	
 	
-	Map_Estim.getKF(j)->setPose(HomogeneousMatrix(poseNoise)* Map_Estim.getKF(j)->getPose());
+    Map_Estim.getKF(j)->setPose(HomogeneousMatrix22(poseNoise)* Map_Estim.getKF(j)->getPose());
 	//Map_Estim.getKF(1)->setPose(HomogeneousMatrix(poseNoise)* Map_Estim.getKF(1)->getPose());
 	//Map_Estim.getKF(0)->setPose(HomogeneousMatrix(poseNoise)* Map_Estim.getKF(0)->getPose());
 	}
@@ -596,7 +597,7 @@ void addDrawFunction(void)
 	else
 	{
 		//show local stereo pair reconstruction error
-		HomogeneousMatrix poseBestRel=kfd.getBestRelPose()*kfd.getPose();
+        HomogeneousMatrix22 poseBestRel=kfd.getBestRelPose()*kfd.getPose();
 		//=> get best matches
 		std::vector<p_match> &bestMatches=*kfd.getBestLocalMatches();
 		for(int m=0;m<bestMatches.size();m++)

@@ -12,7 +12,7 @@ void multiplyGlMatrix(Matrix4f _mat)
 	glMultMatrixf(m);
 }
 
-void set3DGLProjection(Camera *_cam,HomogeneousMatrix _modelView)
+void set3DGLProjection(Camera *_cam,HomogeneousMatrix22 _modelView)
 {
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();

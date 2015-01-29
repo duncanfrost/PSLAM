@@ -32,9 +32,9 @@ MapWindow *mMapWindow;
 PlottingWindow *PlotWindow;
 
 
-HomogeneousMatrix PoseRef;
-HomogeneousMatrix PoseEstim[nb_kf];
-HomogeneousMatrix PoseGT[nb_kf];
+HomogeneousMatrix22 PoseRef;
+HomogeneousMatrix22 PoseEstim[nb_kf];
+HomogeneousMatrix22 PoseGT[nb_kf];
 
 float image_noise=0.;
 
@@ -94,7 +94,7 @@ int main(int argc, char** argv)
 	mMapWindow->addPointCloud(&invDepthEstim);
 	
 	//HomogeneousMatrix moveCam(0,0.8,0.8,0.7,0,0);
-	HomogeneousMatrix moveCam(0,2.1,2.1,2.0,0,0);
+    HomogeneousMatrix22 moveCam(0,2.1,2.1,2.0,0,0);
 	mMapWindow->moveCamera(moveCam);
 	
 	
@@ -114,7 +114,7 @@ void Idle(void)
 	float error_rot=0;
 	for(int i=0;i<nb_kf;i++)
 	{
-		HomogeneousMatrix errorPose=PoseGT[i]*PoseEstim[i].inverse();
+        HomogeneousMatrix22 errorPose=PoseGT[i]*PoseEstim[i].inverse();
 		VectorXf error_p=errorPose.get_p();
 		//std::cout<<"error_p = "<<error_p.transpose()<<std::endl;
 		error_trans+=sqrt(error_p.segment(0,3).squaredNorm());
@@ -142,7 +142,7 @@ void disturbPose()
 		for(int i=0;i<3;i++)poseNoise[i]+=0.02*((double)rand()/(double)RAND_MAX-0.5);
 		for(int i=0;i<3;i++)poseNoise[i+3]+=0.1*((double)rand()/(double)RAND_MAX-0.5);		
 		
-		PoseEstim[j]=HomogeneousMatrix(poseNoise)* PoseEstim[j];
+        PoseEstim[j]=HomogeneousMatrix22(poseNoise)* PoseEstim[j];
 	}
 
 }
@@ -239,7 +239,7 @@ void keyboard_process(unsigned char key, int x, int y)
 
 std::vector<Vector2f> noisyMeasures[nb_kf];
 
-Vector2f ProjInvDepthPoint(PointInvDepth &pt,HomogeneousMatrix &pose)
+Vector2f ProjInvDepthPoint(PointInvDepth &pt,HomogeneousMatrix22 &pose)
 {
 	Vector3f coord_homog=toHomogeneous(pt.meterCoord);
 	Vector3f rotCoordPlusTrans=pose.get_rotation()*coord_homog+pt.invDepth*pose.get_translation();
@@ -281,7 +281,7 @@ void createMap()
 		for(int i=0;i<3;i++)poseNoise[i]+=0.1*((double)rand()/(double)RAND_MAX-0.5);
 		for(int i=0;i<3;i++)poseNoise[i+3]+=0.15*((double)rand()/(double)RAND_MAX-0.5);		
 		
-		PoseGT[j]=HomogeneousMatrix(poseNoise)* PoseRef;
+        PoseGT[j]=HomogeneousMatrix22(poseNoise)* PoseRef;
 	}
 	for(int j=0;j<nb_kf;j++)
 		PoseEstim[j]=PoseRef;
@@ -308,7 +308,7 @@ void createMap()
 	//create noisy measures
 	for(int j=0;j<nb_kf;j++)
 	{
-		HomogeneousMatrix relPoseGT=PoseGT[j]*PoseRef.inverse();
+        HomogeneousMatrix22 relPoseGT=PoseGT[j]*PoseRef.inverse();
 		for(int i=0;i<invDepthGT.size();i++)
 		{
 			Vector2f x_d=ProjInvDepthPoint(invDepthGT[i],relPoseGT);//current projection
@@ -357,8 +357,8 @@ void DoMiniBA()
 	float mLMLambda = 0.0001;//before LevMarConstant
 	float mdLambdaFactor = 2.0;	
 	
-	HomogeneousMatrix relPoseGT[nb_kf];
-	HomogeneousMatrix relPoseEstim[nb_kf];
+    HomogeneousMatrix22 relPoseGT[nb_kf];
+    HomogeneousMatrix22 relPoseEstim[nb_kf];
 	for(int k=0;k<nb_kf;k++)
 	{
 		relPoseGT[k]=PoseGT[k]*PoseRef.inverse();
@@ -648,15 +648,15 @@ void DoMiniBA()
 		VectorXf Dz_all(nbPointsToUpdate);
 		Dz_all=-HxxInvJtp-HxxInvHxp*Dc;
 		
-		HomogeneousMatrix newRelPoseEstim[nb_kf];
+        HomogeneousMatrix22 newRelPoseEstim[nb_kf];
 		for(int k=0;k<nb_kf;k++)
 		{
 			VectorXf Dci=0.2*Dc.segment(6*k,6);
 			//std::cout<<"Dci["<<k<<"] = "<<Dci<<std::endl;
 			//newRelPoseEstim[k]=HomogeneousMatrix(Dci)*relPoseEstim[k];
 			//use rotation in compositional and translkation in additional
-			newRelPoseEstim[k].set_rotation(HomogeneousMatrix(Dci).get_rotation()*relPoseEstim[k].get_rotation());
-			newRelPoseEstim[k].set_translation(HomogeneousMatrix(Dci).get_translation()+relPoseEstim[k].get_translation());
+            newRelPoseEstim[k].set_rotation(HomogeneousMatrix22(Dci).get_rotation()*relPoseEstim[k].get_rotation());
+            newRelPoseEstim[k].set_translation(HomogeneousMatrix22(Dci).get_translation()+relPoseEstim[k].get_translation());
 		}
 
 		//update point coord and depths

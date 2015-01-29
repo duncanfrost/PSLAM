@@ -37,7 +37,7 @@ EmptyWindow *InKfWindow;
 MapWindow *mMapWindow;
 PlottingWindow *PlotWindow;
 
-HomogeneousMatrix PoseGT[100];
+HomogeneousMatrix22 PoseGT[100];
 
 //warning: if image noise is big, then algebraic solution for local reconstruction is pretty crap
 float image_noise=0.6;
@@ -78,7 +78,7 @@ int main(int argc, char** argv)
 	
 	
 	//HomogeneousMatrix moveCam(0,0.8,0.8,0.7,0,0);
-	HomogeneousMatrix moveCam(0,2.1,2.1,2.0,0,0);
+	HomogeneousMatrix22 moveCam(0,2.1,2.1,2.0,0,0);
 	mMapWindow->moveCamera(moveCam);
 	
 	std::cout<<"##################################################################"<<std::endl;
@@ -106,7 +106,7 @@ void Idle(void)
 	float error_rot=0;
 	for(int i=0;i<nb_kf;i++)
 	{
-		HomogeneousMatrix errorPose=PoseGT[i]*Map_Estim.getKF(i)->getPose().inverse();
+		HomogeneousMatrix22 errorPose=PoseGT[i]*Map_Estim.getKF(i)->getPose().inverse();
 		VectorXf error_p=errorPose.get_p();
 		//std::cout<<"error_p = "<<error_p.transpose()<<std::endl;
 		error_trans+=sqrt(error_p.segment(0,3).squaredNorm());
@@ -123,11 +123,11 @@ void Idle(void)
 		NeigbourKFNew &neigbor=*KFc.getPtNeigbour(n);
 		KeyFrame &KFn=*Map_Estim.getKF(neigbor.neighboring_kf);
 		//compute essential matrix
-		HomogeneousMatrix pose_c=KFc.getPose();
-		HomogeneousMatrix pose_n=KFn.getPose();
+		HomogeneousMatrix22 pose_c=KFc.getPose();
+		HomogeneousMatrix22 pose_n=KFn.getPose();
 		
 		//HomogeneousMatrix relPose=neigbor.relative_poses;
-		HomogeneousMatrix relPose=pose_c*pose_n.inverse();
+		HomogeneousMatrix22 relPose=pose_c*pose_n.inverse();
 		Vector3f t_nc=relPose.get_translation();
 		Matrix3f R_nc=relPose.get_rotation();
 		Vector3f nt_nc=t_nc/sqrt(t_nc.squaredNorm());
@@ -241,7 +241,7 @@ void disturb()
 	for(int i=0;i<3;i++)poseNoise[i+3]+=0.05*((double)rand()/(double)RAND_MAX-0.5);
 	
 	
-	Map_Estim.getKF(j)->setPose(HomogeneousMatrix(poseNoise)* Map_Estim.getKF(j)->getPose());
+	Map_Estim.getKF(j)->setPose(HomogeneousMatrix22(poseNoise)* Map_Estim.getKF(j)->getPose());
 	//Map_Estim.getKF(1)->setPose(HomogeneousMatrix(poseNoise)* Map_Estim.getKF(1)->getPose());
 	//Map_Estim.getKF(0)->setPose(HomogeneousMatrix(poseNoise)* Map_Estim.getKF(0)->getPose());
 	}
@@ -275,7 +275,7 @@ void disturb2()
 
 	}
 	
-	HomogeneousMatrix relBestPose= KFc.getBestRelPose();
+	HomogeneousMatrix22 relBestPose= KFc.getBestRelPose();
 	relBestPose.set_translation(relBestPose.get_translation()*scale_change);
 	KFc.setBestRelPose(relBestPose);
 }
@@ -284,7 +284,7 @@ void testRelativeConstraint()
 {
 	MapOptimiser mBA(&Map_Estim);
 	float optRelScale;
-	HomogeneousMatrix optRelPose;
+	HomogeneousMatrix22 optRelPose;
 	float infoScale;
 	MatrixXf infoPose;
 	
@@ -370,7 +370,7 @@ void createMap(obMap &_map)
 	float angle=10;float dist=0.6;
 	
 	//make rotation mvt
-	HomogeneousMatrix posec_c2;
+	HomogeneousMatrix22 posec_c2;
 	posec_c2.TranslateZ(-dist);
 	posec_c2.RotateY(-angle);
 	posec_c2.TranslateZ(dist);
@@ -404,7 +404,7 @@ void createMap(obMap &_map)
 	}	
 	
 	
-	HomogeneousMatrix poseTemp;
+	HomogeneousMatrix22 poseTemp;
 	//poseTemp.Init(0.01,0.01,0.01,0,0,0);
 	poseTemp.TranslateZ(dist);
 	poseTemp.RotateZ(1.57);
@@ -456,8 +456,8 @@ void createMap(obMap &_map)
 		}*/
 		
 		//create best features using local good stereo
-		HomogeneousMatrix poseMiniStereo;
-		HomogeneousMatrix relMiniStereo(-0.05,0,0,0,0,0);
+		HomogeneousMatrix22 poseMiniStereo;
+		HomogeneousMatrix22 relMiniStereo(-0.05,0,0,0,0,0);
 		poseMiniStereo=relMiniStereo*poseTemp;
 		
 		kfi.setBestRelPose(relMiniStereo);
@@ -519,7 +519,7 @@ void createMap(obMap &_map)
 		kfi.setBestLocalMatches(bestMatches);
 		
 		//best stereo has been created using, want it to be set using algebraic solution
-		HomogeneousMatrix relPoseNoscale;
+		HomogeneousMatrix22 relPoseNoscale;
 		bool isMotionGood=CheckNewStereo(bestMatches,&myCamera,relPoseNoscale);
 		if(isMotionGood)
 		{
@@ -579,7 +579,7 @@ void createMap(obMap &_map)
 		KeyFrame &kf2=*Map_Estim.getKF(i+c+1);	 
 		std::cout<<"create edge between kf"<<i<<" and "<<i+1<<std::endl;
 		
-		HomogeneousMatrix relPose=kf1.getPose()*kf2.getPose().inverse();
+		HomogeneousMatrix22 relPose=kf1.getPose()*kf2.getPose().inverse();
 		//kf2 is kfc and kf1 is kfn
 		
 		
@@ -922,7 +922,7 @@ void addDrawFunction(void)
 	else
 	{
 		//show local stereo pair reconstruction error
-		HomogeneousMatrix poseBestRel=kfd.getBestRelPose()*kfd.getPose();
+		HomogeneousMatrix22 poseBestRel=kfd.getBestRelPose()*kfd.getPose();
 		//=> get best matches
 		std::vector<p_match> &bestMatches=*kfd.getBestLocalMatches();
 		for(int m=0;m<bestMatches.size();m++)

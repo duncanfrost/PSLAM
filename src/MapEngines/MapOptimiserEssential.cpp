@@ -163,11 +163,11 @@ void MapOptimiserEssential::optimiseInnerWindowRobust(std::vector<int> &_innerWi
 						if(verb_BA)std::cout<<"\t\tget Essential Matrix"<<std::endl;
 					  
 						//compute essential matrix
-						HomogeneousMatrix pose_c=KFc.getPose();
-						HomogeneousMatrix pose_n=KFn.getPose();
+						HomogeneousMatrix22 pose_c=KFc.getPose();
+						HomogeneousMatrix22 pose_n=KFn.getPose();
 						
 						//HomogeneousMatrix relPose=neigbor.relative_poses;
-						HomogeneousMatrix relPose=pose_c*pose_n.inverse();
+						HomogeneousMatrix22 relPose=pose_c*pose_n.inverse();
 						Vector3f t_nc=relPose.get_translation();
 						Vector3f nt_nc=t_nc/sqrt(t_nc.squaredNorm());
 						Matrix3f R_nc=relPose.get_rotation();
@@ -509,7 +509,7 @@ void MapOptimiserEssential::optimiseInnerWindowRobust(std::vector<int> &_innerWi
 				if(verb_BA)std::cout<<"\tapply update"<<std::endl;
 				float scales_kfs[nbOptimKf];
 				for(int k=0;k<nbOptimKf;k++)scales_kfs[k]=1;
-				HomogeneousMatrix pose_kfs[nbOptimKf];
+				HomogeneousMatrix22 pose_kfs[nbOptimKf];
 				for(int k=0;k<nbOptimKf;k++)pose_kfs[k]=myMap->getKF(innerWindowKFs[k])->getPose();
 
 				
@@ -523,7 +523,7 @@ void MapOptimiserEssential::optimiseInnerWindowRobust(std::vector<int> &_innerWi
 					
 					if(verb_BA)std::cout<<"\tapply update pose"<<std::endl;
 					VectorXf dp(Dp.segment(7*j+1,6));
-					pose_kfs[j]=HomogeneousMatrix(dp)* pose_kfs[j];
+					pose_kfs[j]=HomogeneousMatrix22(dp)* pose_kfs[j];
 				}
 				
 				
@@ -549,16 +549,16 @@ void MapOptimiserEssential::optimiseInnerWindowRobust(std::vector<int> &_innerWi
 						  
 						  
 							//compute essential matrix
-							HomogeneousMatrix pose_c;
+							HomogeneousMatrix22 pose_c;
 							if(id_opt_c==-1)pose_c=KFc.getPose();
 							else pose_c=pose_kfs[id_opt_c];
 							
-							HomogeneousMatrix pose_n;
+							HomogeneousMatrix22 pose_n;
 							if(id_opt_n==-1)pose_n=KFn.getPose();
 							else pose_n=pose_kfs[id_opt_n];
 							
 							//HomogeneousMatrix relPose=neigbor.relative_poses;
-							HomogeneousMatrix relPose=pose_c*pose_n.inverse();
+							HomogeneousMatrix22 relPose=pose_c*pose_n.inverse();
 							Vector3f t_nc=relPose.get_translation();
 							Vector3f nt_nc=t_nc/sqrt(t_nc.squaredNorm());
 							Matrix3f R_nc=relPose.get_rotation();
@@ -688,11 +688,11 @@ void MapOptimiserEssential::optimiseInnerWindowRobust(std::vector<int> &_innerWi
 						for(int f=0;f<KFc.getNbLocalBestFeatures();f++)
 							KFc.getPtLocalBestFeatures(f)->depthInRef*=scales_kfs[k];
 						
-						HomogeneousMatrix relPose= KFc.getRelativePose();
+						HomogeneousMatrix22 relPose= KFc.getRelativePose();
 						relPose.set_translation(relPose.get_translation()*scales_kfs[k]);
 						KFc.setRelativePose(relPose);
 						
-						HomogeneousMatrix relBestPose= KFc.getBestRelPose();
+						HomogeneousMatrix22 relBestPose= KFc.getBestRelPose();
 						relBestPose.set_translation(relBestPose.get_translation()*scales_kfs[k]);
 						KFc.setBestRelPose(relBestPose);
 					}
@@ -813,7 +813,7 @@ void MapOptimiserEssential::optimiseInnerWindow(std::vector<int> &_innerWindowKF
 		//we are going to optimise over scale of each KF and relative pose between KF
 		float scales_kfs[nbOptimKf];
 		for(int k=0;k<nbOptimKf;k++)scales_kfs[k]=1;
-		HomogeneousMatrix pose_kfs[nbOptimKf];
+		HomogeneousMatrix22 pose_kfs[nbOptimKf];
 		for(int k=0;k<nbOptimKf;k++)pose_kfs[k]=myMap->getKF(innerWindowKFs[k])->getPose();
 		
 		int LUTidKFtoInnerWindow[myMap->getNbKeyFrames()];
@@ -861,11 +861,11 @@ void MapOptimiserEssential::optimiseInnerWindow(std::vector<int> &_innerWindowKF
 					  
 					  
 						//compute essential matrix
-						HomogeneousMatrix pose_c=KFc.getPose();
-						HomogeneousMatrix pose_n=KFn.getPose();
+						HomogeneousMatrix22 pose_c=KFc.getPose();
+						HomogeneousMatrix22 pose_n=KFn.getPose();
 						
 						//HomogeneousMatrix relPose=neigbor.relative_poses;
-						HomogeneousMatrix relPose=pose_c*pose_n.inverse();
+						HomogeneousMatrix22 relPose=pose_c*pose_n.inverse();
 						Vector3f t_nc=relPose.get_translation();
 						Vector3f nt_nc=t_nc/sqrt(t_nc.squaredNorm());
 						Matrix3f R_nc=relPose.get_rotation();
@@ -1142,7 +1142,7 @@ void MapOptimiserEssential::optimiseInnerWindow(std::vector<int> &_innerWindowKF
 					
 					if(verb_BA)std::cout<<"\tapply update pose"<<std::endl;
 					VectorXf dp(Dp.segment(7*j+1,6));
-					pose_kfs[j]=HomogeneousMatrix(dp)* pose_kfs[j];
+					pose_kfs[j]=HomogeneousMatrix22(dp)* pose_kfs[j];
 				}
 				
 				
@@ -1155,17 +1155,17 @@ void MapOptimiserEssential::optimiseInnerWindow(std::vector<int> &_innerWindowKF
 					KeyFrame &KFc=*myMap->getKF(idKF);
 					
 					VectorXf dp(Dp.segment(7*k+1,6));
-					if(verb_BA)std::cout<<"\t\tpose up "<<HomogeneousMatrix(dp)<<std::endl;
+					if(verb_BA)std::cout<<"\t\tpose up "<<HomogeneousMatrix22(dp)<<std::endl;
 					if(verb_BA)std::cout<<"\t\tscale up "<<scales_kfs[k]<<std::endl;
 					KFc.setPose(pose_kfs[k]);
 					for(int f=0;f<KFc.getNbLocalBestFeatures();f++)
 						KFc.getPtLocalBestFeatures(f)->depthInRef*=scales_kfs[k];
 					
-					HomogeneousMatrix relPose= KFc.getRelativePose();
+					HomogeneousMatrix22 relPose= KFc.getRelativePose();
 					relPose.set_translation(relPose.get_translation()*scales_kfs[k]);
 					KFc.setRelativePose(relPose);
 					
-					HomogeneousMatrix relBestPose= KFc.getBestRelPose();
+					HomogeneousMatrix22 relBestPose= KFc.getBestRelPose();
 					relBestPose.set_translation(relBestPose.get_translation()*scales_kfs[k]);
 					KFc.setBestRelPose(relBestPose);
 					

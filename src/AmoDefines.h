@@ -12,8 +12,8 @@
 
 #define WORK_DESKTOP
 #ifdef WORK_DESKTOP
-  #define PEYE_CALIB_FILE "/home/amaury/Program/Projects/files/Calibration/PlaystationEye/camera.cfg"
-  #define KITTI_CALIB_FILE "/home/amaury/Program/Projects/files/Calibration/KITTI/camera.cfg"
+  #define PEYE_CALIB_FILE "camera.cfg"
+  #define KITTI_CALIB_FILE "camera.cfg"
   #define WIMU_WORLD_DIR "/home/amaury/Program/Projects/files/Simu/noTransparent/"
 #else
   #define PEYE_CALIB_FILE "/home/momo/Progam/Data/camera.cfg"
@@ -58,5 +58,9 @@ void InitProcAndGPU();
 #define endlGreen "\033[0m"<<std::endl
 #define coutRed std::cout << "\033[1;31m"
 #define endlRed "\033[0m"<<std::endl
+#define coutBlue std::cout << "\033[1;30m"
+#define endlBlue "\033[0m"<<std::endl
+
+
 
 

@@ -4,6 +4,7 @@
 
 VisualisationModule::VisualisationModule(void (*_idle_fct)())
 {
+    coutGreen << "Function pointer: " << (void *)_idle_fct << endlGreen;
 	idle_fct=_idle_fct;
 	nb_windows=0;
 	autoPositioning=true;

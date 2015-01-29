@@ -129,7 +129,13 @@ void matcherWrapper::match(cv::Mat *_img_p)
 	if(useKLTpointsOnly)
 		matches=matcher.getMatchesFromClass(4);
 	else
-		matches=matcher.getMatches();
+    {
+          std::vector<p_match> test2 = matcher.getMatches();
+          p_match test;
+          //matches=matcher.getMatches();
+    }
+
+
 	
 	matcher.bucketFeatures(5,50,50); 
 	if(useKLTpointsOnly)
@@ -137,11 +143,14 @@ void matcherWrapper::match(cv::Mat *_img_p)
 	else
 		matchesBucket=matcher.getMatches();
 
-	matcher.toWarpedId(matches);
-	matcher.toWarpedId(matchesBucket);
+//	matcher.toWarpedId(matches);
+//	matcher.toWarpedId(matchesBucket);
 	
 	//current matches got there pos u1c and v1c defined on img_2_warped
 	//want them on img current => warp back
+
+    matches.clear();
+    std::cout << "Size of matches" << matches.size() << std::endl;
 	for(int i=0;i<matches.size();i++)
 	{
 		float x=matches[i].u1c;

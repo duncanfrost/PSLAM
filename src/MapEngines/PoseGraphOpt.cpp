@@ -73,7 +73,7 @@ void PoseGraphOptimiser::optimiseInnerWindow(std::vector<int> &innerWin,int nb_i
 			KFc.getPtLocalBestFeatures(f)->depthInRef*=scale_change;
 		
 		//rescale best stereo
-	  	HomogeneousMatrix relBestPose= KFc.getBestRelPose();
+	  	HomogeneousMatrix22 relBestPose= KFc.getBestRelPose();
 		relBestPose.set_translation(relBestPose.get_translation()*scale_change);
 		KFc.setBestRelPose(relBestPose);
 	}
@@ -131,7 +131,7 @@ void PoseGraphOptimiser::optimiseInnerWindow(std::vector<int> &innerWin,int nb_i
 	}
 }
 
-void PoseGraphOptimiser::addCamera(HomogeneousMatrix _pose,int _id_main,bool _fixed)
+void PoseGraphOptimiser::addCamera(HomogeneousMatrix22 _pose,int _id_main,bool _fixed)
 {
 	//coutMapping<<"Add Camera "<<_id_main<<endlMapping;
 	PGOcamera newCam;
@@ -148,7 +148,7 @@ void PoseGraphOptimiser::addCamera(HomogeneousMatrix _pose,int _id_main,bool _fi
 	mCams.push_back(newCam);
 }
 
-void PoseGraphOptimiser::addEdge(int _id1,int _id2,HomogeneousMatrix pose12)
+void PoseGraphOptimiser::addEdge(int _id1,int _id2,HomogeneousMatrix22 pose12)
 {
 	PGOedge newEdge;
 	newEdge.id_cam1=-1;
@@ -171,7 +171,7 @@ void PoseGraphOptimiser::addEdge(int _id1,int _id2,HomogeneousMatrix pose12)
 	if(newEdge.id_cam1!=-1 && newEdge.id_cam2!=-1)
 		mEdges.push_back(newEdge);
 }
-void PoseGraphOptimiser::addEdge(int _id1,int _id2,HomogeneousMatrix pose12,MatrixXf _InfoMatrix)
+void PoseGraphOptimiser::addEdge(int _id1,int _id2,HomogeneousMatrix22 pose12,MatrixXf _InfoMatrix)
 {
 	PGOedge newEdge;
 	newEdge.id_cam1=-1;
@@ -199,7 +199,7 @@ void PoseGraphOptimiser::addEdge(int _id1,int _id2,HomogeneousMatrix pose12,Matr
 	}
 }
 
-void PoseGraphOptimiser::addEdge(int _id1,int _id2,float scale12,float _infoScale,HomogeneousMatrix pose12,MatrixXf _InfoMatrix)
+void PoseGraphOptimiser::addEdge(int _id1,int _id2,float scale12,float _infoScale,HomogeneousMatrix22 pose12,MatrixXf _InfoMatrix)
 {
 	PGOedge newEdge;
 	newEdge.id_cam1=-1;
@@ -246,8 +246,8 @@ void PoseGraphOptimiser::optimise(int nb_iter)
 			int id_second_kf=mEdges[i].id_cam2;
 			
 			//error to minimize = LogSe3(T01*T0*T1.inv)
-			HomogeneousMatrix &relPose=mEdges[i].pose12;
-			HomogeneousMatrix HError=relPose*mCams[id_first_kf].pose*mCams[id_second_kf].pose.inverse();
+			HomogeneousMatrix22 &relPose=mEdges[i].pose12;
+			HomogeneousMatrix22 HError=relPose*mCams[id_first_kf].pose*mCams[id_second_kf].pose.inverse();
 			VectorXf logError=HError.get_p();
 			Vector3f Dt;for(int j=0;j<3;j++)Dt[j]=logError[j];
 			Vector3f Dw;for(int j=0;j<3;j++)Dw[j]=logError[j+3];
@@ -305,7 +305,7 @@ void PoseGraphOptimiser::optimise(int nb_iter)
 			if(mCams[i].id_optim!=-1)
 			{
 				VectorXf tDp=Dp.segment(6*mCams[i].id_optim,6);
-				mCams[i].pose=HomogeneousMatrix(tDp)*mCams[i].pose;
+				mCams[i].pose=HomogeneousMatrix22(tDp)*mCams[i].pose;
 				
 				float translation_update=(tDp.segment(0,3)).squaredNorm();
 				if(max_cam_translation_update<translation_update)
@@ -342,12 +342,12 @@ void PoseGraphOptimiser::optimiseSim3(int nb_iter)
 			//std::cout<<"mCams["<<i<<"].scale = "<<mCams[i].scale<<std::endl;
 			//std::cout<<"mCams["<<i<<"].scale = "<<mCams[i].scale<<std::endl;
 			
-			HomogeneousMatrix relPose=mEdges[i].pose12;
+			HomogeneousMatrix22 relPose=mEdges[i].pose12;
 			//goal is to have it equal to mCams[id_first_kf].pose*mCams[id_second_kf].pose.inverse()
 			//relative translation constraint has been computed using init scale=1 of each camera, if scale of cam changes then this translation is scaled with it
 			relPose.set_translation(mCams[id_first_kf].scale*relPose.get_translation());
 			
-			HomogeneousMatrix HError=relPose*mCams[id_first_kf].pose*mCams[id_second_kf].pose.inverse();
+			HomogeneousMatrix22 HError=relPose*mCams[id_first_kf].pose*mCams[id_second_kf].pose.inverse();
 			VectorXf logError=HError.get_p();
 			Vector3f Dt;for(int j=0;j<3;j++)Dt[j]=logError[j];
 			Vector3f Dw;for(int j=0;j<3;j++)Dw[j]=logError[j+3];
@@ -414,7 +414,7 @@ void PoseGraphOptimiser::optimiseSim3(int nb_iter)
 				mCams[i].scale=mCams[i].scale+tDs;
 				//std::cout<<"mCams["<<i<<"].scale = "<<mCams[i].scale<<std::endl;
 				VectorXf tDp=Dp.segment(7*mCams[i].id_optim+1,6);
-				mCams[i].pose=HomogeneousMatrix(tDp)*mCams[i].pose;
+				mCams[i].pose=HomogeneousMatrix22(tDp)*mCams[i].pose;
 				
 				float translation_update=(tDp.segment(0,3)).squaredNorm();
 				if(max_cam_translation_update<translation_update)
@@ -431,13 +431,13 @@ void PoseGraphOptimiser::optimiseSim3(int nb_iter)
 }
 
 
-HomogeneousMatrix PoseGraphOptimiser::getUpdatedCamPose(int id_main)
+HomogeneousMatrix22 PoseGraphOptimiser::getUpdatedCamPose(int id_main)
 {
 	for(int c=0;c<mCams.size();c++)
 		if(mCams[c].id_main==id_main)return mCams[c].pose;
 		
 	std::cerr<<"BundleAjuster::getUpdatedCamPose> cam not found"<<endlMapping;
-	return HomogeneousMatrix();//should not happen
+	return HomogeneousMatrix22();//should not happen
 }
 
 float PoseGraphOptimiser::getUpdatedCamScale(int id_main)

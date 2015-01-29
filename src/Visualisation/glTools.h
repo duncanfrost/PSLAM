@@ -23,7 +23,7 @@
 void multiplyGlMatrix(Matrix4f _mat);
 
 //set projection matrix and modelview of opengl from cam, to use primitives as glVertex3f
-void set3DGLProjection(Camera *_cam,HomogeneousMatrix _modelView);
+void set3DGLProjection(Camera *_cam,HomogeneousMatrix22 _modelView);
 void unset3DGLProjection();
 
 

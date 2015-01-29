@@ -886,7 +886,7 @@ cv::Mat applySE2TzImage(cv::Mat &Img,Vector4f p,Camera* _cam)
 	return res;			
 }
 
-HomogeneousMatrix SE2TztoSO3(Vector4f _p,float mean_depth,Camera* _cam)
+HomogeneousMatrix22 SE2TztoSO3(Vector4f _p,float mean_depth,Camera* _cam)
 {
 	//transform two points with SE2 and do non linear optim to find same thing using SO3
 	Vector2f refPoints[2];
@@ -983,7 +983,7 @@ HomogeneousMatrix SE2TztoSO3(Vector4f _p,float mean_depth,Camera* _cam)
 			break;
 	}
 	
-	return HomogeneousMatrix(0,0,mean_depth/(1+_p[3])-mean_depth,w[0],w[1],w[2]);
+	return HomogeneousMatrix22(0,0,mean_depth/(1+_p[3])-mean_depth,w[0],w[1],w[2]);
 }
 
 float estimateSE2TzPyr(cv::Mat &T0,cv::Mat &I0,Camera* _cam,Vector4f &res,int pyr_lvl,int modulo,int _max_iter)
