@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <objectr3d/Camera.h>
-#include <objectr3d/MapPoint.h>
-#include <objectr3d/KeyFrame.h>
-#include <objectr3d/obMap.h>
+#include "../Primitives/Camera.h"
+#include "../Primitives/MapPoint.h"
+#include "../Primitives/KeyFrame.h"
+#include "../Primitives/obMap.h"
 
 #define LevMarLikeConstant 1e-5;
 

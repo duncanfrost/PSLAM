@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include <objectr3d/AmoDefines.h>
-#include <objectr3d/GeoFunctions.h>
+#include "../AmoDefines.h"
+#include "../MapEngines/GeoFunctions.h"
 #include <Eigen/Geometry>
 #include <iostream>
 

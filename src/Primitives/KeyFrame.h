@@ -14,15 +14,15 @@
 
 #pragma once
 
-#include <objectr3d/AmoDefines.h>
+#include "../AmoDefines.h"
 #include <vector>
-#include <objectr3d/HomogeneousMatrix.h>
-#include <objectr3d/MapPoint.h>
-#include <objectr3d/matcherWrapper.h>
-#include <objectr3d/GlobalTransfoEstim.h>
-#include <objectr3d/GeoFunctions.h>
-#include <objectr3d/ImageProcess.h>
-#include <objectr3d/HomogFinder.h>
+#include "../Primitives/HomogeneousMatrix.h"
+#include "../Primitives/MapPoint.h"
+#include "../VisuOdo/matcherWrapper.h"
+#include "../TrackEngines/GlobalTransfoEstim.h"
+#include "../MapEngines/GeoFunctions.h"
+#include "../TrackEngines/ImageProcess.h"
+#include "../MapEngines/HomogFinder.h"
 
 #include "opencv2/core/core.hpp"
 #include "opencv2/features2d/features2d.hpp"

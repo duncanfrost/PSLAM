@@ -2,7 +2,7 @@
 #ifndef VIDEOSOURCELIVECV_H
 #define VIDEOSOURCELIVECV_H
 
-#include <objectr3d/VideoSource.h>
+#include "VideoSource.h"
 
 class VideoSourceLiveCV : public amoVideoSource
 {

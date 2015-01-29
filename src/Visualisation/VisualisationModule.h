@@ -1,16 +1,16 @@
 #ifndef VISUMODULE_H
 #define VISUMODULE_H
 
-#include <objectr3d/AmoDefines.h>
+#include "../AmoDefines.h"
 #include HGLUT
 
-#include <objectr3d/MotherWindow.h>
-#include <objectr3d/EmptyWindow.h>
-#include <objectr3d/MapWindow.h>
-#include <objectr3d/SimuWindow.h>
-#include <objectr3d/PlottingWindow.h>
-#include <objectr3d/ImageWindow.h>
-#include <objectr3d/VideoSource.h>
+#include "MotherWindow.h"
+#include "EmptyWindow.h"
+#include "MapWindow.h"
+#include "SimuWindow.h"
+#include "PlottingWindow.h"
+#include "ImageWindow.h"
+#include "../ImageSource/VideoSource.h"
 
 #include <list>
 

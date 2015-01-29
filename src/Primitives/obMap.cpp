@@ -1,6 +1,6 @@
 #include "obMap.h"
 
-#include <objectr3d/AmoDefinesParameters.h>
+#include "../AmoDefinesParameters.h"
 
 
 obMap::obMap()
@@ -673,7 +673,7 @@ std::vector<int> obMap::getConnectedKeyframes(std::vector<int> _idkf,int _depth)
 	return res;
 }
 
-#include <objectr3d/RobustMatching.h>
+#include "../TrackEngines/RobustMatching.h"
 
 void obMap::checkForSmallLoop(int _idKF,int _depth_min,int _depth_max)
 {

@@ -2,10 +2,10 @@
 #define AMOWINDOW_H
 
 #include <string>
-#include <objectr3d/AmoDefines.h>
+#include "../AmoDefines.h"
 #include HGLUT
-#include <objectr3d/glTools.h>
-#include <objectr3d/VisuButton.h>
+#include "glTools.h"
+#include "VisuButton.h"
 
 #define NB_WINDOWS_MAX 10
 

@@ -4,10 +4,11 @@
 #define AMOVERBOSE 1
 
 #include <fstream>
-#include <objectr3d/Camera.h>
+#include "../src/Primitives/Camera.h" 
+#include "../src/Visualisation/VisualisationModule.h"
+#include "../src/ImageSource/VideoSourceLiveCV.h"
 
-#include <objectr3d/VisualisationModule.h>
-#include <objectr3d/VideoSourceLiveCV.h>
+
 
 #include <Eigen/Core>
 #include <vector_types.h>

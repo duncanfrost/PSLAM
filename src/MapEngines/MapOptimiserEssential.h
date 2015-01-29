@@ -5,7 +5,7 @@
 #pragma once
 
 
-#include <objectr3d/GraphFunctions.h>
+#include "GraphFunctions.h"
 
 #define LevMarLikeConstant 1e-5;
 

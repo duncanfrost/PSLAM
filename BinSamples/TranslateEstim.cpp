@@ -3,13 +3,12 @@
 #define AMOVERBOSE 1
 
 #include <fstream>
-#include <objectr3d/Camera.h>
-
-#include <objectr3d/VisualisationModule.h>
-#include <objectr3d/VideoSourceLiveCV.h>
-#include <objectr3d/CvWrapper.h>
-#include <objectr3d/ImageProcess.h>
-#include <objectr3d/GlobalTransfoEstim.h>
+#include "../src/Primitives/Camera.h" 
+#include "../src/Visualisation/VisualisationModule.h"
+#include "../src/ImageSource/VideoSourceLiveCV.h"
+#include "../src/CvWrapper.h"
+#include "../src/TrackEngines/ImageProcess.h"
+#include "../src/TrackEngines/GlobalTransfoEstim.h"
 
 #include <Eigen/Core>
 using namespace Eigen;

@@ -3,11 +3,11 @@
 #include <vector>
 
 
-#include <objectr3d/Camera.h>
-#include <objectr3d/MotherWindow.h>
-#include <objectr3d/HomogeneousMatrix.h>
-#include <objectr3d/obMap.h>
-#include <objectr3d/objloader.h>
+#include "../Primitives/Camera.h"
+#include "MotherWindow.h"
+#include "../Primitives/HomogeneousMatrix.h"
+#include "../Primitives/obMap.h"
+#include "objloader.h"
 
 class SimuWindow:public MotherWindow
 {

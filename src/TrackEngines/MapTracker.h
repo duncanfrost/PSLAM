@@ -9,13 +9,13 @@
 #include <Eigen/Core>
 using namespace Eigen;
 
-#include <objectr3d/AmoDefines.h>
-#include <objectr3d/ImageProcess.h>
-#include <objectr3d/obMap.h>
-#include <objectr3d/HomogeneousMatrix.h>
-#include <objectr3d/GlobalTransfoEstim.h>
-#include <objectr3d/MapOptimiser.h>
-#include <objectr3d/MapOptimiserEssential.h>
+#include "../AmoDefines.h"
+#include "ImageProcess.h"
+#include "../Primitives/obMap.h" 
+#include "../Primitives/HomogeneousMatrix.h"
+#include "GlobalTransfoEstim.h"
+#include "../MapEngines/MapOptimiser.h" 
+#include "../MapEngines/MapOptimiserEssential.h" 
 
 //for fast corner detection
 //#include <opencv/cvaux.h> //for opencv 2.4

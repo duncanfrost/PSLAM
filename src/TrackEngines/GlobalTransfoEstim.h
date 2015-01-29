@@ -5,13 +5,12 @@
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 
-#include <objectr3d/AmoDefines.h>
-#include <objectr3d/CvWrapper.h>
-#include <objectr3d/CvWrapper.h>
-#include <objectr3d/Camera.h>
-#include <objectr3d/GeoFunctions.h>
-#include <objectr3d/ImageProcess.h>
-#include <objectr3d/HomogeneousMatrix.h>
+#include "../AmoDefines.h"
+#include "../CvWrapper.h"
+#include "../Primitives/Camera.h" 
+#include "../MapEngines/GeoFunctions.h"
+#include "../TrackEngines/ImageProcess.h" 
+#include "../Primitives/HomogeneousMatrix.h" 
 
 #include <Eigen/Core>
 using namespace Eigen;
@@ -60,7 +59,7 @@ HomogeneousMatrix SE2TztoSO3(Vector4f _p,float mean_depth,Camera* _cam);//SE3 + 
 float estimateTzPyr(cv::Mat &T,cv::Mat &I, Camera* _cam,int pyr_lvl=0,int modulo=1,int _max_iter=50);
 float estimateSE2TzPyr(cv::Mat &T,cv::Mat &I, Camera* _cam,Vector4f &res,int pyr_lvl=0,int modulo=1,int _max_iter=50);
 
-#include <objectr3d/motionEstim.h>
+#include "../VisuOdo/motionEstim.h"
 
 Vector3f estimateRotation(std::vector<p_match> &matches, Camera* _cam);
 Vector3f estimateRotationInv(std::vector<p_match> &matches, Camera* _cam);

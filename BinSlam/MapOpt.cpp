@@ -3,16 +3,14 @@
 #define AMOVERBOSE 1
 
 #include <fstream>
-#include <objectr3d/Camera.h>
-
-#include <objectr3d/VisualisationModule.h>
-#include <objectr3d/VideoSourceSeq.h>
-#include <objectr3d/MapTracker.h>
-#include <objectr3d/obMap.h>
-#include <objectr3d/BundleAdjuster.h>
-#include <objectr3d/MapOptimiserEssential.h>
-#include <objectr3d/PoseGraphOpt.h>
-
+#include "../src/Primitives/Camera.h" 
+#include "../src/Visualisation/VisualisationModule.h"
+#include "../src/ImageSource/VideoSourceSeq.cpp"
+#include "../src/TrackEngines/MapTracker.h"
+#include "../src/Primitives/obMap.h"
+#include "../src/MapEngines/BundleAdjuster.h"
+#include "../src/MapEngines/MapOptimiserEssential.h"
+#include "../src/MapEngines/PoseGraphOpt.h"
 
 #include <Eigen/Core>
 using namespace Eigen;
@@ -248,8 +246,7 @@ void removeUnusedPoints()
 	std::cout<<"nb points = "<<Map_Estim.getNbMapPoints()<<std::endl;
 	std::cout<<"nb used points = "<<Map_Estim.getNbUsedMapPoints()<<std::endl;
 }
-
-#include <objectr3d/RobustMatching.h>
+#include "../src/TrackEngines/RobustMatching.h"
 #include <vector_types.h>
 std::vector<Vector2f> scene_corners_disp(4);
 std::vector<Vector2f> scene_corners_disp_refined(4);

@@ -473,7 +473,7 @@ void Matcher::setTwoFrames (int32_t* dims,uint8_t *I1,int32_t *_VisoDescriptors1
 
 }
 
-#include <objectr3d/AmoTimer.h>
+#include "../AmoTimer.h"
 
 void Matcher::matchFeatures(Matrix *Tr_delta) {
   

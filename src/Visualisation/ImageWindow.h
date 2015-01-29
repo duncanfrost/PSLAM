@@ -3,9 +3,9 @@
 #define IMAGEWINDOW_H
 
 
-#include <objectr3d/MotherWindow.h>
-#include <objectr3d/glTexture.h>
-#include <objectr3d/VideoSource.h>
+#include "MotherWindow.h"
+#include "glTexture.h"
+#include "../ImageSource/VideoSource.h"
 
 //TextureSet imgTexture;
 	

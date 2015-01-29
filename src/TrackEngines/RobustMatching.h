@@ -6,13 +6,12 @@
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 
-#include <objectr3d/AmoDefines.h>
-#include <objectr3d/CvWrapper.h>
-#include <objectr3d/CvWrapper.h>
-#include <objectr3d/Camera.h>
-#include <objectr3d/GeoFunctions.h>
-#include <objectr3d/motionEstim.h>
-#include <objectr3d/HomogFinder.h>
+#include "../AmoDefines.h"
+#include "../CvWrapper.h"
+#include "../Primitives/Camera.h" 
+#include "../MapEngines/GeoFunctions.h" 
+#include "../VisuOdo/motionEstim.h"
+#include "../MapEngines/HomogFinder.h"
 
 #include <Eigen/Core>
 using namespace Eigen;

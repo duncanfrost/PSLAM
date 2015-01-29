@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <objectr3d/AmoDefines.h>
+#include "../AmoDefines.h"
 #include <Eigen/Geometry>
 
 #include <iostream>

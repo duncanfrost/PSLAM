@@ -4,7 +4,7 @@
 #include <cvd/byte.h>
 #include <cvd/rgba.h>
 */
-#include <objectr3d/MotherWindow.h>
+#include "MotherWindow.h"
 #define MAX_VAL_PER_PLOTS 10
 
 //TextureSet imgTexture;

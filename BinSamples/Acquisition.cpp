@@ -3,10 +3,10 @@
 #define AMOVERBOSE 1
 
 #include <fstream>
-#include <objectr3d/Camera.h>
+#include "../src/Primitives/Camera.h" 
 
-#include <objectr3d/VisualisationModule.h>
-#include <objectr3d/VideoSourceLiveCV.h>
+#include "../src/Visualisation/VisualisationModule.h"
+#include "../src/ImageSource/VideoSourceLiveCV.h"
 
 void Idle(void) ;
 void processNormalKeys(unsigned char key, int x, int y);

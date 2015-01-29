@@ -3,8 +3,8 @@
 #define VIDEOSOURCE_H
 
 
-#include <objectr3d/AmoDefines.h>
-#include <objectr3d/Camera.h>
+#include "../AmoDefines.h"
+#include "../Primitives/Camera.h"
 
 #include <pthread.h>
 

@@ -4,12 +4,11 @@
 #define AMOVERBOSE 1
 
 #include <fstream>
-#include <objectr3d/Camera.h>
-
-#include <objectr3d/VisualisationModule.h>
-#include <objectr3d/MapOptimiser.h>
-#include <objectr3d/MapOptimiserEssential.h>
-#include <objectr3d/obMap.h>
+#include "../src/Primitives/Camera.h" 
+#include "../src/Visualisation/VisualisationModule.h"
+#include "../src/MapEngines/MapOptimiser.h"
+#include "../src/MapEngines/MapOptimiserEssential.h"
+#include "../src/Primitives/obMap.h"
 
 void Idle(void) ;
 

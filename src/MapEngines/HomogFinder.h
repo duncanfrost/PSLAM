@@ -3,10 +3,10 @@
 
 #pragma once
 
-#include <objectr3d/AmoDefines.h>
-#include <objectr3d/HomogeneousMatrix.h>
-#include <objectr3d/Camera.h>
-#include <objectr3d/matcher.h>
+#include "../AmoDefines.h"
+#include "../Primitives/HomogeneousMatrix.h"
+#include "../Primitives/Camera.h"
+#include "../VisuOdo/matcher.h"
 #include <vector>
 
 //algebraic estimation

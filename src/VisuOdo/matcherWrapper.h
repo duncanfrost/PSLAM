@@ -3,10 +3,10 @@
 
 #include "motionEstim.h"
 
-#include <objectr3d/AmoDefines.h>
-#include <objectr3d/ImageProcess.h>
-#include <objectr3d/HomogFinder.h>
-#include <objectr3d/GlobalTransfoEstim.h>
+#include "../AmoDefines.h"
+#include "../TrackEngines/ImageProcess.h"
+#include "../MapEngines/HomogFinder.h"
+#include "../TrackEngines/GlobalTransfoEstim.h"
 using namespace Eigen;
 
 #include "opencv2/video/tracking.hpp"

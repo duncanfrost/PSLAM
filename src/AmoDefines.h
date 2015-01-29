@@ -21,7 +21,7 @@
 #endif
 
 
-#include <objectr3d/AmoDefinesParameters.h>
+#include "AmoDefinesParameters.h"
 
 #define OUTLIERCOUNTMAX 5
 
@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include <objectr3d/AmoTimer.h>
+#include "AmoTimer.h"
 
 void InitProcAndGPU();
 

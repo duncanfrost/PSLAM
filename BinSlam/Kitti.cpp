@@ -3,13 +3,12 @@
 #define AMOVERBOSE 1
 
 #include <fstream>
-#include <objectr3d/Camera.h>
-
-#include <objectr3d/VisualisationModule.h>
-#include <objectr3d/VideoSourceSeq.h>
-#include <objectr3d/MapTracker.h>
-#include <objectr3d/obMap.h>
-#include <objectr3d/BundleAdjuster.h>
+#include "../src/Primitives/Camera.h" 
+#include "../src/Visualisation/VisualisationModule.h"
+#include "../src/ImageSource/VideoSourceSeq.cpp"
+#include "../src/TrackEngines/MapTracker.h"
+#include "../src/Primitives/obMap.h"
+#include "../src/MapEngines/BundleAdjuster.h"
 
 
 #include <Eigen/Core>

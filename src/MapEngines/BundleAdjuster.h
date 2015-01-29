@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <objectr3d/Camera.h>
-#include <objectr3d/ImageProcess.h>
-#include <objectr3d/HomogeneousMatrix.h>
-#include <objectr3d/obMap.h>
+#include "../Primitives/Camera.h"
+#include "../TrackEngines/ImageProcess.h"
+#include "../Primitives/HomogeneousMatrix.h"
+#include "../Primitives/obMap.h"
 
 #define LevMarLikeConstant 1e-5;
 

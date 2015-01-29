@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <objectr3d/AmoDefines.h>
-#include <objectr3d/Camera.h>
-#include <objectr3d/HomogeneousMatrix.h>
+#include "../AmoDefines.h"
+#include "../Primitives/Camera.h"
+#include "../Primitives/HomogeneousMatrix.h"
 #include HGLUT
 
 #include <iostream>

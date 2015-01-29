@@ -1,6 +1,6 @@
 //definition of runnable object
 
-#include <objectr3d/CvWrapper.h>
+#include "CvWrapper.h"
 
 
 float getColorSubpix(const cv::Mat& img, Vector2f pt)

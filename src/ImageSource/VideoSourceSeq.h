@@ -2,7 +2,7 @@
 #ifndef VIDEOSOURCESEQ_H
 #define VIDEOSOURCESEQ_H
 
-#include <objectr3d/VideoSource.h>
+#include "VideoSource.h"
 
 class VideoSourceSeq : public amoVideoSource
 {

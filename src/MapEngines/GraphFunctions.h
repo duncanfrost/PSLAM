@@ -3,7 +3,7 @@
 #pragma once
 
 
-#include <objectr3d/obMap.h>
+#include "../Primitives/obMap.h"
 #define LevMarLikeConstant 1e-5;
 
 struct kf_edgeNew

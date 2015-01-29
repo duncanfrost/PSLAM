@@ -5,14 +5,12 @@
 #define AMOVERBOSE 1
 
 #include <fstream>
-#include <objectr3d/Camera.h>
-
-#include <objectr3d/VisualisationModule.h>
-#include <objectr3d/VideoSourceLiveCV.h>
-#include <objectr3d/MapTracker.h>
-#include <objectr3d/obMap.h>
-#include <objectr3d/MapOptimiserEssential.h>
-
+#include "../src/Primitives/Camera.h" 
+#include "../src/Visualisation/VisualisationModule.h"
+#include "../src/ImageSource/VideoSourceLiveCV.h"
+#include "../src/MapEngines/MapOptimiserEssential.h"
+#include "../src/TrackEngines/MapTracker.h"
+#include "../src/Primitives/obMap.h"
 
 #include <Eigen/Core>
 using namespace Eigen;

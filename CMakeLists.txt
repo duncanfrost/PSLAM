@@ -23,8 +23,6 @@ SET(OBJECTR3D_VERSION_PATCH 0)
 SET(OBJECTR3D_VERSION "${OBJECTR3D_VERSION_MAJOR}.${OBJECTR3D_VERSION_MINOR}")
 SET(OBJECTR3D_VERSION_FULL "${OBJECTR3D_VERSION}.${OBJECTR3D_VERSION_PATCH}")      
 
-SET(OBJECTR3D_INCLUDE_DIR "${OBJECTR3D_BINARY_DIR}/include/tracking")
-SET(OBJECTR3D_DOC_DIR "${OBJECTR3D_BINARY_DIR}/doc")
 
 #-----------------------------------------------------------------------------
 
@@ -34,8 +32,6 @@ SET(LIBRARY_OUTPUT_PATH ${OBJECTR3D_BINARY_DIR}/lib)
 # The location in which to install OBJECTR3D binaries.
 SET(BINARY_OUTPUT_PATH ${OBJECTR3D_BINARY_DIR}/bin)
 
-# the include directory we depend on
-SET(OBJECTR3D_INTERN_INCLUDE_DIR ${OBJECTR3D_BINARY_DIR}/include)
 # the third party include directories we depend on
 SET(OBJECTR3D_EXTERN_INCLUDE_DIR "")
 # the internal visp libs we want to createn
@@ -56,7 +52,7 @@ SET(CMAKE_MODULE_PATH ${OBJECTR3D_SOURCE_DIR}/CMakeModules)
 INCLUDE(CheckLibraryExists)
 
 # Create include directory which will contain all the headers
-MAKE_DIRECTORY(${OBJECTR3D_INCLUDE_DIR})
+#MAKE_DIRECTORY(${OBJECTR3D_INCLUDE_DIR})
 
 
 

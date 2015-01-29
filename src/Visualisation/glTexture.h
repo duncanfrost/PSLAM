@@ -7,7 +7,7 @@
 #ifndef GLTEXTURE__H
 #define GLTEXTURE__H
 
-#include <objectr3d/AmoDefines.h>
+#include "../AmoDefines.h"
 #include HGLUT
 
 #include <opencv/cv.h>

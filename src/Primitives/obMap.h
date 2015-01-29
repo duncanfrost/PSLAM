@@ -9,9 +9,9 @@
 
 #include <algorithm>
 
-#include <objectr3d/AmoDefines.h>
-#include <objectr3d/KeyFrame.h>
-#include <objectr3d/Camera.h>
+#include "../AmoDefines.h"
+#include "../Primitives/KeyFrame.h"
+#include "../Primitives/Camera.h"
 //#include <objectr3d/BundleAdjuster.h>
 //#include <objectr3d/PoseGraphOpt.h>
 

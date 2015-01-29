@@ -1,5 +1,5 @@
 #include "MapTracker.h"
-#include <objectr3d/motionEstim.h>
+#include "../VisuOdo/motionEstim.h"
 
 MapTracker::MapTracker(Camera *_cam,obMap *_map)
 {

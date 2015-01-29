@@ -4,9 +4,9 @@
 #include <cvd/byte.h>
 #include <cvd/rgba.h>
 */
-#include <objectr3d/AmoDefines.h>
+#include "../AmoDefines.h"
 #include HGLUT
-#include <objectr3d/glTools.h>
+#include "glTools.h"
 //TextureSet imgTexture;
 	
 class VisuButton

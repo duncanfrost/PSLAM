@@ -1,5 +1,5 @@
 //Copyright 2008 Isis Innovation Limited 
-#include <objectr3d/VideoSourceSeq.h>
+#include "VideoSourceSeq.h"
 
 using namespace std;
 

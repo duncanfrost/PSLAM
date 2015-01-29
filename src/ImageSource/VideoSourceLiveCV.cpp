@@ -1,5 +1,5 @@
 //Copyright 2008 Isis Innovation Limited 
-#include <objectr3d/VideoSourceLiveCV.h>
+#include "VideoSourceLiveCV.h"
 
 using namespace std;
 

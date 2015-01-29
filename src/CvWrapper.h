@@ -4,7 +4,7 @@
 
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
-#include <objectr3d/AmoDefines.h>
+#include "AmoDefines.h"
 
 #include <Eigen/Core>
 using namespace Eigen;
