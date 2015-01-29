@@ -10,18 +10,18 @@ INCLUDE(${OBJECTR3D_SOURCE_DIR}/CMakeHeaderFileList.cmake)
 # Create rule to copy all the headers from src to include/tracking
 #----------------------------------------------------------------------
 # For each header, we create a rule
-SET(HEADER_IN_INCLUDE_DIR "")
-SET(ADDED_SRC_DEPEND_PROPERTIES "")
-FOREACH(header ${HEADER_ALL})
-  GET_FILENAME_COMPONENT(headerName ${header} NAME) 
-  ADD_CUSTOM_COMMAND(
-    OUTPUT ${OBJECTR3D_BINARY_DIR}/include/objectr3d/${headerName}
-    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${header} ${OBJECTR3D_BINARY_DIR}/include/objectr3d/${headerName}
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${header}
-    )
-  SET(HEADER_IN_INCLUDE_DIR ${HEADER_IN_INCLUDE_DIR} ${OBJECTR3D_BINARY_DIR}/include/objectr3d/${headerName}
-    )
-ENDFOREACH(header)
+#SET(HEADER_IN_INCLUDE_DIR "")
+#SET(ADDED_SRC_DEPEND_PROPERTIES "")
+#FOREACH(header ${HEADER_ALL})
+#  GET_FILENAME_COMPONENT(headerName ${header} NAME) 
+#  ADD_CUSTOM_COMMAND(
+#    OUTPUT ${OBJECTR3D_BINARY_DIR}/include/objectr3d/${headerName}
+#    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${header} ${OBJECTR3D_BINARY_DIR}/include/objectr3d/${headerName}
+#    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${header}
+#    )
+#  SET(HEADER_IN_INCLUDE_DIR ${HEADER_IN_INCLUDE_DIR} ${OBJECTR3D_BINARY_DIR}/include/objectr3d/${headerName}
+#    )
+#ENDFOREACH(header)
 
 
 

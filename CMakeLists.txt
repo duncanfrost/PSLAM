@@ -27,7 +27,7 @@ SET(OBJECTR3D_VERSION_FULL "${OBJECTR3D_VERSION}.${OBJECTR3D_VERSION_PATCH}")
 #-----------------------------------------------------------------------------
 
 # The location in which to install Example libraries.
-SET(LIBRARY_OUTPUT_PATH ${OBJECTR3D_BINARY_DIR}/lib)
+
 
 # The location in which to install OBJECTR3D binaries.
 SET(BINARY_OUTPUT_PATH ${OBJECTR3D_BINARY_DIR}/bin)
@@ -99,7 +99,6 @@ SET(CMAKE_CXX_FLAGS_DEBUG "-g -DNDEBUG")
 #include eigen
 include_directories("/home/amaury/Program/Libs/eigen-eigen-ffa86ffb5570")
 #include cuda just for fevtor uchar3 definition
-include_directories("/usr/local/cuda-5.5/targets/x86_64-linux/include/")
 
 
 
