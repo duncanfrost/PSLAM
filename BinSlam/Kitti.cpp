@@ -51,7 +51,7 @@ int main(int argc, char** argv)
 	std::cout<<"################################################################# "<<std::endl;
 	//get camera calibration
 	//myVideoSource=new VideoSourceLiveCV(CamPlaystationEye);
-	myVideoSource=new VideoSourceSeq("/home/amaury/Program/Projects/files/KITTI2/%06d.png",KittiCam,0);
+    myVideoSource=new VideoSourceSeq("/media/duncanlocal/Data2/KITTI/dataset/sequences/00/image_0/%06d.png",KittiCam,0);
 	
 	//at turn :
 	//myVideoSource=new VideoSourceSeq("/home/amaury/Program/Projects/files/KITTI2/%06d.png",KittiCam,90);
