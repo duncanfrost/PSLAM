@@ -30,7 +30,10 @@
 
 
 class KeyFrame;
-
+/*!
+ * \brief The uptoscaleFeature struct is a 2D feature in a keyframe.
+ * Each has an estimated depth which allows it to be converted to 3D coordinates in the camera-frame coordinate system.
+ */
 struct uptoscaleFeature
 {
 	//TODO integrate fundamental matric score from which feature has been created, could be good info to have robust rescaling
