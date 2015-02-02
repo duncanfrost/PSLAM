@@ -1,4 +1,7 @@
-//estimate rotation between two consecutive frames
+/*============================================================================
+  RotationEstim.cpp: Sample program that estimates the rotation between two
+  images. Not currently working.
+============================================================================*/
 
 #define AMOVERBOSE 1
 
@@ -17,7 +20,9 @@ using namespace Eigen;
 
 int main(int argc, char** argv)
 {
+    std::cout << "Got here" << std::endl;
 	InitProcAndGPU();
+    std::cout << "Got here" << std::endl;
 	
 	cv::Mat Img0=cv::imread("/home/amaury/Pictures/jump.png",CV_LOAD_IMAGE_GRAYSCALE);
 	if (Img0.cols == 0) {

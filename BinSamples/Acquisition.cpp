@@ -1,5 +1,6 @@
-//sample to show how to use live images
-
+/*============================================================================
+  Acquisition.cpp: Sample program to test video aquisition from the camera
+============================================================================*/
 #define AMOVERBOSE 1
 
 #include <fstream>
