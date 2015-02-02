@@ -8,7 +8,6 @@
 
 SET(SRC_OBJ
 	AmoDefines.cpp
-	Runnable.cpp
 	CvWrapper.cpp
 )
 

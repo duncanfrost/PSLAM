@@ -8,7 +8,6 @@
 set(HEADER_OBJ
 	AmoDefines.h
 	AmoDefinesParameters.h
-	Runnable.h
 	CvWrapper.h
         AmoTimer.h
 )
