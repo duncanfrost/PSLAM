@@ -76,8 +76,8 @@ int main(int argc, char** argv)
 	mMapWindow->addCamera(&current_estimated_pose,Vector3f(1.,0.,0.));
 	
 	//HomogeneousMatrix moveCam(0.,3.,3.,1.0,0,0);
-	HomogeneousMatrix moveCam(0.,-3.,3.,-1.0,0,0);
-	mMapWindow->setCameraPose(moveCam);
+    HomogeneousMatrix moveCam(0.,-3.,3.,-1.0,0,0);
+    mMapWindow->setCameraPose(moveCam);
 
 	
 	std::cout<<"##################################################################"<<std::endl;

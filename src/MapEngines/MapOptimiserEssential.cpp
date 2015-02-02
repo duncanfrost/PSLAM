@@ -762,8 +762,8 @@ void MapOptimiserEssential::optimiseInnerWindowRobust(std::vector<int> &_innerWi
 
 void MapOptimiserEssential::optimiseInnerWindow(std::vector<int> &_innerWindowKFs,int nb_iter)
 {
-	coutGreen<<"###############################################"<<endlGreen;
-	coutGreen<<"########### optimiseInnerWindow "<<endlGreen;
+    //coutGreen<<"###############################################"<<endlGreen;
+    //coutGreen<<"########### optimiseInnerWindow "<<endlGreen;
 	innerWindowKFs=_innerWindowKFs;
  	//std::cout<<"innerWindowKFs = "<<std::endl;
 	//for(int i=0;i<innerWindowKFs.size();i++)std::cout<<innerWindowKFs[i]<<"  "<<std::endl;

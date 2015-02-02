@@ -34,6 +34,7 @@
 
 #include "AmoTimer.h"
 
+
 void InitProcAndGPU();
 
 #include <iostream>
@@ -58,5 +59,8 @@ void InitProcAndGPU();
 #define endlGreen "\033[0m"<<std::endl
 #define coutRed std::cout << "\033[1;31m"
 #define endlRed "\033[0m"<<std::endl
+
+#define coutBlue std::cout << "\033[1;34m"
+#define endlBlue "\033[0m"<<std::endl
 
 

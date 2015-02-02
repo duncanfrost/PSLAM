@@ -17,7 +17,10 @@ void MapTracker::Init(Camera *_cam,obMap *_map)
 
 void MapTracker::TrackFrame(cv::Mat &_current_img,cv::Mat *_current_img_col,bool useCol)
 {
-	std::cout<<"#############################################"<<std::endl;
+    //std::cout<<"#############################################"<<std::endl;
+
+
+    //coutBlue << "Number of keyframes: " << myMap->getNbKeyFrames() << endlBlue;
 	//start lony knowing previous position with respect to closest KF in map
 	//ie the one with an overlap of imahe space > KFoverlap and closest in term of translation
 	
@@ -27,7 +30,7 @@ void MapTracker::TrackFrame(cv::Mat &_current_img,cv::Mat *_current_img_col,bool
 	for(int i=1;i<NB_LEVELS;i++)
 		cv::pyrDown( img_c[i-1], img_c[i], cv::Size( img_c[i-1].cols/2, img_c[i-1].rows/2 ) );	
 
-	
+
 	//=> try to do matching with each of the KF
 	//use the one with the most matches to do coarse pose estimation
 	idrelKF=0;
@@ -36,11 +39,11 @@ void MapTracker::TrackFrame(cv::Mat &_current_img,cv::Mat *_current_img_col,bool
 	timerMatching.start();
 
 	Matrix3f newMotionPriorHomography;
-#ifndef USE_OMP_C
-	std::cout<<"MapTracker : update each close KF with new frame"<<std::endl;
+#ifndef USE_OMP
+    //std::cout<<"MapTracker : update each close KF with new frame"<<std::endl;
 	for(int n=0;n<id_closestKF.size();n++)
 	{
-		std::cout<<"\tKF["<<id_closestKF[n]<<"] useNewFrame "<<std::endl;
+        //std::cout<<"\tKF["<<id_closestKF[n]<<"] useNewFrame "<<std::endl;
 		
 		Matrix3f currentHomog=myMap->getKF(id_closestKF[n])->getHomography();
 		Matrix3f currentHomogPlusPrior=MotionPriorHomography*currentHomog;
@@ -98,12 +101,12 @@ void MapTracker::TrackFrame(cv::Mat &_current_img,cv::Mat *_current_img_col,bool
 		MotionPriorHomography=newMotionPriorHomography;
 	
 	timerMatching.stop("Matching with KFs");
-	std::cout<<"nb_match_best = "<<nb_match_best<<std::endl;
+    //std::cout<<"nb_match_best = "<<nb_match_best<<std::endl;
 	
 	
 	if(nb_match_best>MIN_MATCHES_EDGE)	
 	{
-		std::cout<<"MapTracker : checkNeigborsForPoints"<<std::endl;
+        //std::cout<<"MapTracker : checkNeigborsForPoints"<<std::endl;
 		amoTimer timerLinkage;
 		timerLinkage.start();
 		//introduction of currentFrame in one neigbor KF could have given it better local stereo
@@ -117,13 +120,13 @@ void MapTracker::TrackFrame(cv::Mat &_current_img,cv::Mat *_current_img_col,bool
 		
 		//use best neigboring KF to refine pose estimation
 		//for that use all map points and local features linked to matches
-		std::cout<<"pose refine before Optim map"<<std::endl;
+        //std::cout<<"pose refine before Optim map"<<std::endl;
 		KeyFrame &closestKF=*myMap->getKF(idrelKF);
 		//relPose=closestKF.computeRelativeCurrentPoseWithAllMatches(myCamera);
 		
 		//at that stage have new current frame and might have new matches and points in map
 		//=> do very local Bundle adjustment around current position
-		std::cout<<"optimiseInnerWindow"<<std::endl;
+        //std::cout<<"optimiseInnerWindow"<<std::endl;
 		
 		//get KF in inner window
 		int depth_inner=2;
@@ -140,7 +143,7 @@ void MapTracker::TrackFrame(cv::Mat &_current_img,cv::Mat *_current_img_col,bool
 		//MapOptimiserEssential mBA(myMap);
 		//mBA.optimiseInnerWindowRobust(optimKF,nb_iter);
 		
-		std::cout<<"pose refine after Optim map"<<std::endl;
+        //std::cout<<"pose refine after Optim map"<<std::endl;
 		//now use best 3D estimation of current KF and matches with current image
 		//to get relative pose;
 		
@@ -180,9 +183,9 @@ void MapTracker::TrackFrame(cv::Mat &_current_img,cv::Mat *_current_img_col,bool
 			if(current_overlap>max_overlap)
 				max_overlap=current_overlap;
 		}
-		std::cout<<"max overlap: "<<max_overlap<<std::endl;
+        //std::cout<<"max overlap: "<<max_overlap<<std::endl;
 		
-		if(max_overlap<KFoverlap)
+        if((max_overlap<KFoverlap) && (myMap->getNbKeyFrames() < 1))
 		{
 			coutRed<<"small overlap: "<<max_overlap<<", create new KF"<<endlRed;
 			if(!useCol)
@@ -213,7 +216,7 @@ void MapTracker::TrackFrame(cv::Mat &_current_img,cv::Mat *_current_img_col,bool
 				}
 			}
 			//do if reconstruction angle is large enough
-			if(min_recangle>KFreconstructionAngle)
+            if(min_recangle>KFreconstructionAngle && myMap->getNbKeyFrames() < 1)
 			{
 				
 				/*cv::imwrite("ref1.png",_current_img);//for offline
@@ -258,98 +261,19 @@ void MapTracker::TrackFrame(cv::Mat &_current_img,cv::Mat *_current_img_col,bool
 			
 		}
 		
-		//get ones with enough overlap
-		//check ones neigbor with activeWindow
-		//at the same time update homography of the kfs that are checked
-		//std::vector<int> id_closestKFnew=myMap->getDirectNeigborsWithGoodEstimatedOverlap(id_closestKF);
-		//TODO : pb is that with parallax homographies are getting wrong especially compositions of them
-		//=> NCC and overlap are not great for small loop closure estimation (eg in Kitti)
-		/*int dist_graph_max=1;
-		std::vector<int> id_closestKFnew=myMap->getDirectNeigborsWithGoodEstimatedOverlapDepth(id_closestKF,dist_graph_max);
-				
-		//add them
-		for(int n=0;n<id_closestKFnew.size();n++)id_closestKF.push_back(id_closestKFnew[n]);
-		
-		//update ZNCC
-		for(int n=0;n<id_closestKF.size();n++)myMap->getKF(id_closestKF[n])->computeNCCwithLastFrame(_current_img);
-		for(int n=0;n<id_closestKF.size();n++)myMap->getKF(id_closestKF[n])->computeOverlap();
-		
 
-		
-		std::cout<<"id_closestKF before pick= "<<std::endl;
-		for(int i=0;i<id_closestKF.size();i++)std::cout<<id_closestKF[i]<<"  ";
-		std::cout<<std::endl;
-		for(int i=0;i<id_closestKF.size();i++)std::cout<<myMap->getKF(id_closestKF[i])->getOverlapWithLastFrame()<<"  ";
-		std::cout<<std::endl;
-		for(int i=0;i<id_closestKF.size();i++)std::cout<<myMap->getKF(id_closestKF[i])->getNCCwithLastFrame()<<"  ";
-		std::cout<<std::endl;
-		
-		//check NCC between current image and warped KF
-		//pick MAX_KF_ACTIVE best neigbor
-		if(id_closestKF.size()>MAX_KF_ACTIVE)
-		{
-			int bestNeigbors[MAX_KF_ACTIVE];
-			
-			int NeigborWithMinOverlap;
-			float minNCCNeigbor;
-			
-			for(int n=0;n<MAX_KF_ACTIVE;n++)
-			{
-				bestNeigbors[n]=id_closestKF[n];
-				
-				if(n==0 || minNCCNeigbor>myMap->getKF(id_closestKF[n])->getOverlapWithLastFrame())
-				{
-					NeigborWithMinOverlap=n;
-					minNCCNeigbor=myMap->getKF(id_closestKF[n])->getOverlapWithLastFrame();
-				}		
-			}
-			
-			
-			for(int n=MAX_KF_ACTIVE;n<id_closestKF.size();n++)
-			{
-				//std::cout<<"check "<<NeigborWithMinOverlap<<" min = "<<minNCCNeigbor<<" <? "<<myMap->getKF(id_closestKF[n])->getOverlapWithLastFrame()<<std::endl;
-				if(minNCCNeigbor<myMap->getKF(id_closestKF[n])->getOverlapWithLastFrame())
-				{
-					//if current checked kf has better overlap than the one with min overlap in current bestNeigbors
-					//then save current checked kf instead
-					bestNeigbors[NeigborWithMinOverlap]=id_closestKF[n];
-					
-					//update mins
-					for(int n2=0;n2<MAX_KF_ACTIVE;n2++)
-					{
-						if(n2==0 || minNCCNeigbor<myMap->getKF(bestNeigbors[n2])->getOverlapWithLastFrame())
-						{
-							NeigborWithMinOverlap=n2;
-							minNCCNeigbor=myMap->getKF(bestNeigbors[n2])->getOverlapWithLastFrame();
-						}		
-					}	
-				}		
-			}
-			
-			//replace neigbors by best ones
-			id_closestKF.clear();
-			for(int n=0;n<MAX_KF_ACTIVE;n++)
-				id_closestKF.push_back(bestNeigbors[n]);
-		
-			//remove as many old KF as we need to respect active window size
-
-			
-			//std::cout<<"id_closestKF after = "<<std::endl;
-			//for(int i=0;i<id_closestKF.size();i++)std::cout<<id_closestKF[i]<<"  ";
-			//std::cout<<std::endl;
-		}*/
-		std::cout<<"id_closestKF = "<<std::endl;
-		for(int i=0;i<id_closestKF.size();i++)std::cout<<id_closestKF[i]<<"  ";
-		std::cout<<std::endl;
+        //std::cout<<"id_closestKF = "<<std::endl;
+//		for(int i=0;i<id_closestKF.size();i++)std::cout<<id_closestKF[i]<<"  ";
+//		std::cout<<std::endl;
 		while(id_closestKF.size()>MAX_KF_ACTIVE)
 		{
 			std::vector<int>::iterator it =  std::min_element(id_closestKF.begin(), id_closestKF.end());
 			id_closestKF.erase(it);
 			
 		}
-		std::cout<<"id_closestKF after = "<<std::endl;
-		for(int i=0;i<id_closestKF.size();i++)std::cout<<id_closestKF[i]<<"  ";
-		std::cout<<std::endl;
+        //std::cout<<"id_closestKF after = "<<std::endl;
+        //for(int i=0;i<id_closestKF.size();i++)std::cout<<id_closestKF[i]<<"  ";
+        //std::cout<<std::endl;
 
 		timerKeyFrameProcess.stop("KeyFrame Process");
 		

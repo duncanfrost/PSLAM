@@ -18,7 +18,7 @@ class amoTimer
 			double elapsedTime; 
 			elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;      
 			elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0;   // us to ms		
-			std::cout << "time "<<addPrint<<": "<<elapsedTime << " ms.\n";
+            //std::cout << "time "<<addPrint<<": "<<elapsedTime << " ms.\n";
 	};
   private:
 	timeval t1, t2;     
@@ -38,7 +38,7 @@ class amoTimer
 	void stop(std::string addPrint="")
 	{
 			t2 = omp_get_wtime( ); 
-			std::cout << "time "<<addPrint<<": "<<(t2-t1)*1000. << " ms.\n";
+    //		std::cout << "time "<<addPrint<<": "<<(t2-t1)*1000. << " ms.\n";
 	};
 	float getTimeDiffms(std::string addPrint="")
 	{

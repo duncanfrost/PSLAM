@@ -68,7 +68,7 @@ public:
 	
 	
 	~BundleAdjuster(){};
-#ifdef USE_OMP_C	
+#ifdef USE_OMP
 	void setMoreImportantStuffToDo(bool *_moreImportantStuffWaiting,omp_lock_t *_lock_check_more_prior);
 #endif	
 	//fill Bundle
@@ -147,7 +147,7 @@ private:
 	bool goneWrong;
 	
 	//interruption variables (if more important task to be done)
-#ifdef USE_OMP_C
+#ifdef USE_OMP
 	bool canBeInterrupted;
 	omp_lock_t *lock_check_more_prior;
 	bool *moreImportantStuffWaiting;

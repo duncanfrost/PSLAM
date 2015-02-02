@@ -30,12 +30,12 @@ BundleAdjuster::BundleAdjuster(obMap *_myMap)
 	point_translation_small=1e-5;
 	cam_translation_small=1e-5;
 	goneWrong=false;
-#ifdef USE_OMP_C	
+#ifdef USE_OMP
 	canBeInterrupted=false;
 #endif	
 	gain=DEFAULT_GAIN_GN;
 }
-#ifdef USE_OMP_C	
+#ifdef USE_OMP
 void BundleAdjuster::setMoreImportantStuffToDo(bool *_moreImportantStuffWaiting,omp_lock_t *_lock_check_more_prior)
 {
 	canBeInterrupted=true;
@@ -535,7 +535,7 @@ void BundleAdjuster::OptimisePointPosition(int nb_iter)
 			hasConverged=true;
 			break;
 		}
-#ifdef USE_OMP_C		
+#ifdef USE_OMP
 		if(canBeInterrupted)
 		{
 			omp_set_lock(lock_check_more_prior);
@@ -967,7 +967,7 @@ void BundleAdjuster::BundleAdjustRobust(int nb_iter)
 			mLMLambda = mLMLambda * mdLambdaFactor;
 			mdLambdaFactor = mdLambdaFactor * 2;
 		}
-#ifdef USE_OMP_C			
+#ifdef USE_OMP
 		if(canBeInterrupted)
 		{
 			omp_set_lock(lock_check_more_prior);
@@ -1283,7 +1283,7 @@ void BundleAdjuster::BundleAdjust(int nb_iter,bool LM)
 			}
 					
 		}
-#ifdef USE_OMP_C			
+#ifdef USE_OMP
 		if(canBeInterrupted)
 		{
 			omp_set_lock(lock_check_more_prior);
@@ -1959,7 +1959,7 @@ void BundleAdjuster::BundleAdjustRobust2(int nb_iter)
 			mLMLambda = mLMLambda * mdLambdaFactor;
 			mdLambdaFactor = mdLambdaFactor * 2;
 		}
-#ifdef USE_OMP_C			
+#ifdef USE_OMP
 		if(canBeInterrupted)
 		{
 			omp_set_lock(lock_check_more_prior);

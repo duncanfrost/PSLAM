@@ -37,6 +37,7 @@ struct linkFeature//one per feature per neigbor
 
 void obMap::createNewKeyFrame(cv::Mat &_current_img,HomogeneousMatrix &_pose)
 {
+    coutGreen << "Creating new keyframe." << endlGreen;
 	int idNewKF=KeyFrameList.size();
 	std::cout<<"Create KF "<<idNewKF<<std::endl;
 	KeyFrame newKF;//set position to identity
@@ -47,6 +48,7 @@ void obMap::createNewKeyFrame(cv::Mat &_current_img,HomogeneousMatrix &_pose)
 
 void obMap::createNewKeyFrame(cv::Mat &_current_img,HomogeneousMatrix &relPose,int &idrelKF,std::vector<int> &id_closestKF)
 {
+    coutGreen << "Creating new keyframe." << endlGreen;
 	int idNewKF=KeyFrameList.size();
 	std::cout<<"Create KF "<<idNewKF<<std::endl;
 	KeyFrame newKF;//set position to identity
@@ -81,7 +83,7 @@ void obMap::createNewKeyFrame(cv::Mat &_current_img,HomogeneousMatrix &relPose,i
 	}
 	//update new KF with best neigbor
 	//use inverse of matches and inverse of 3D movement 
-	std::cout<<"id_max_fundamental = "<<id_max_fundamental<<std::endl;
+    std::cout<<"id_max_fundamental = "<<id_max_fundamental;
 	std::vector<p_match> matches_bestNeigbor=KeyFrameList[id_max_fundamental].getCurrentMatches();
 	HomogeneousMatrix relPose_bestNeigbor=KeyFrameList[id_max_fundamental].getRelativePose();
 	KeyFrameList[idNewKF].useNeigborForInitLocalStereo(KeyFrameList[id_max_fundamental].getImg_p(0),matches_bestNeigbor,relPose_bestNeigbor,myCamera);

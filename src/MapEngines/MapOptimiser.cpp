@@ -31,7 +31,7 @@ struct kf_loc_jacobian2
 void MapOptimiser::optimiseInnerWindowRobust(std::vector<int> &_innerWindowKFs,int nb_iter)
 {
 	//coutGreen<<"###############################################"<<endlGreen;
-	coutGreen<<"########### optimiseInnerWindow "<<endlGreen;
+    //coutGreen<<"########### optimiseInnerWindow "<<endlGreen;
 	innerWindowKFs=_innerWindowKFs;
  	//std::cout<<"innerWindowKFs = "<<std::endl;
 	//for(int i=0;i<innerWindowKFs.size();i++)std::cout<<innerWindowKFs[i]<<"  "<<std::endl;
@@ -384,7 +384,7 @@ void MapOptimiser::optimiseInnerWindowRobust(std::vector<int> &_innerWindowKFs,i
 void MapOptimiser::optimiseInnerWindow(std::vector<int> &_innerWindowKFs,int nb_iter)
 {
 	//coutGreen<<"###############################################"<<endlGreen;
-	coutGreen<<"########### optimiseInnerWindow "<<endlGreen;
+    //coutGreen<<"########### optimiseInnerWindow "<<endlGreen;
 	innerWindowKFs=_innerWindowKFs;
  	//std::cout<<"innerWindowKFs = "<<std::endl;
 	//for(int i=0;i<innerWindowKFs.size();i++)std::cout<<innerWindowKFs[i]<<"  "<<std::endl;
@@ -720,10 +720,10 @@ void MapOptimiser::optimiseInnerWindow2(std::vector<int> &_innerWindowKFs,int nb
 	//check windows:
 	//std::cout<<"FullWindow = "<<std::endl;
 	//for(int i=0;i<FullWindow.size();i++)std::cout<<FullWindow[i]<<"  "<<std::endl;
-	std::cout<<"innerWindowKFs = "<<std::endl;
-	for(int i=0;i<innerWindowKFs.size();i++)std::cout<<innerWindowKFs[i]<<"  ";
-	std::cout<<std::endl;
-	std::cout<<"outerWindow = "<<std::endl;
+    //std::cout<<"innerWindowKFs = "<<std::endl;
+    //for(int i=0;i<innerWindowKFs.size();i++)std::cout<<innerWindowKFs[i]<<"  ";
+    //std::cout<<std::endl;
+    //std::cout<<"outerWindow = "<<std::endl;
 	for(int i=0;i<outerWindow.size();i++)std::cout<<outerWindow[i]<<"  ";
 	std::cout<<std::endl<<std::endl;
 	
@@ -1724,8 +1724,8 @@ void MapOptimiser::optimiseInnerWindowRobust2(std::vector<int> &_innerWindowKFs,
 {
 	if(_innerWindowKFs.size()!=0)
 	{
-	coutGreen<<"###############################################"<<endlGreen;
-	coutGreen<<"########### optimiseInnerWindow "<<endlGreen;
+    //coutGreen<<"###############################################"<<endlGreen;
+    //coutGreen<<"########### optimiseInnerWindow "<<endlGreen;
 	innerWindowKFs=_innerWindowKFs;
  	//std::cout<<"innerWindowKFs = "<<std::endl;
 	//for(int i=0;i<innerWindowKFs.size();i++)std::cout<<innerWindowKFs[i]<<"  "<<std::endl;
@@ -1740,8 +1740,7 @@ void MapOptimiser::optimiseInnerWindowRobust2(std::vector<int> &_innerWindowKFs,
 	{
 		outerWindow.push_back(*innerWindowKFs.begin());
 		innerWindowKFs.erase(innerWindowKFs.begin());
-	}
-
+    }
 	//union of inner and outer
 	std::vector<int> FullWindow=innerWindowKFs;
 	for(int k=0;k<outerWindow.size();k++)FullWindow.push_back(outerWindow[k]);
@@ -1749,12 +1748,12 @@ void MapOptimiser::optimiseInnerWindowRobust2(std::vector<int> &_innerWindowKFs,
 	//check windows:
 	//std::cout<<"FullWindow = "<<std::endl;
 	//for(int i=0;i<FullWindow.size();i++)std::cout<<FullWindow[i]<<"  "<<std::endl;
-	std::cout<<"innerWindowKFs = "<<std::endl;
-	for(int i=0;i<innerWindowKFs.size();i++)std::cout<<innerWindowKFs[i]<<"  ";
-	std::cout<<std::endl;
-	std::cout<<"outerWindow = "<<std::endl;
-	for(int i=0;i<outerWindow.size();i++)std::cout<<outerWindow[i]<<"  ";
-	std::cout<<std::endl<<std::endl;
+//	std::cout<<"innerWindowKFs = "<<std::endl;
+//	for(int i=0;i<innerWindowKFs.size();i++)std::cout<<innerWindowKFs[i]<<"  ";
+//	std::cout<<std::endl;
+//	std::cout<<"outerWindow = "<<std::endl;
+//	for(int i=0;i<outerWindow.size();i++)std::cout<<outerWindow[i]<<"  ";
+//	std::cout<<std::endl<<std::endl;
 	
 	bool verb_BA=false;
 	int nbOptimKf=innerWindowKFs.size();
