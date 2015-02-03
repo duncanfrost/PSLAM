@@ -1,9 +1,3 @@
-//Detection and posterior segmentation
-//Object Detection defines the detection primitives using a
-//part based detector, create color models and estimate pixel wise foreground background proba and 
-//defines the output structure
-
-
 #pragma once
 
 #include "../AmoDefines.h"
