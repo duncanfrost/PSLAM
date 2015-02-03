@@ -53,6 +53,10 @@ struct OutlierMeasure
 
 enum ConvergenceResult { Converged, NotConverged, Diverged };
 
+/*!
+ * This implements the local bundle adjustment that happens in keyframes
+ */
+
 class BundleAdjuster
 {
 public:

@@ -7,6 +7,9 @@
 #include "GraphFunctions.h"
 #define LevMarLikeConstant 1e-5;
 
+/*!
+ * \brief The MapOptimiser class implements the global map point minimisation.
+ */
 class MapOptimiser
 {
 public:
