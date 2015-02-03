@@ -13,7 +13,7 @@
 #define WORK_DESKTOP
 #ifdef WORK_DESKTOP
   #define PEYE_CALIB_FILE "camera.cfg"
-  #define KITTI_CALIB_FILE "camera.cfg"
+  #define KITTI_CALIB_FILE "camera2.cfg"
   #define WIMU_WORLD_DIR "/home/amaury/Program/Projects/files/Simu/noTransparent/"
 #else
   #define PEYE_CALIB_FILE "/home/momo/Progam/Data/camera.cfg"
