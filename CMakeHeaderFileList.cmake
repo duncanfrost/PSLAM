@@ -19,7 +19,6 @@ set(HEADER_MAPENGINES
 	MapEngines/MapOptimiser.h
 	MapEngines/BundleAdjuster.h
 	MapEngines/MapOptimiserEssential.h
-	MapEngines/GraphFunctions.h
 	MapEngines/PoseGraphOpt.h
 )
 set(HEADER_TRACKENGINES

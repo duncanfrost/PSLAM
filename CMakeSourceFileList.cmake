@@ -17,7 +17,6 @@ set(SRC_MAPENGINES
 	MapEngines/MapOptimiser.cpp
 	MapEngines/BundleAdjuster.cpp
 	MapEngines/MapOptimiserEssential.cpp
-	MapEngines/GraphFunctions.cpp
 	MapEngines/PoseGraphOpt.cpp
 )
 set(SRC_TRACKENGINES

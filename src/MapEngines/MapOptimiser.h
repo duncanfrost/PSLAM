@@ -4,8 +4,23 @@
 #pragma once
 
 
-#include "GraphFunctions.h"
+#include "../Primitives/obMap.h"
 #define LevMarLikeConstant 1e-5;
+
+
+
+struct kf_edgeNew
+{
+    int kf1,kf2;
+    float weight;
+};
+
+struct scale_constraint
+{
+    int kf_id;
+    float rescale;
+};
+
 
 /*!
  * \brief The MapOptimiser class implements the global map point minimisation.
@@ -32,6 +47,9 @@ public:
 	
 	//get optimal relative pose and scale between two keyframes and information matrix resulting for the alignment of theor local features
 	void getRelativePoseAndScale(int _kf1,int _kf2,float &optRelScale,HomogeneousMatrix &optRelPose,float &infoScale,MatrixXf &infoPose);
+
+    std::vector<kf_edgeNew> getEdgesInInnerWin(obMap *myMap, std::vector<int> _innerWindowKFs);
+
 
 private:
 	//map to be optimised

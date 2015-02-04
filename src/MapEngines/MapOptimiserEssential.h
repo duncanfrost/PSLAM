@@ -5,8 +5,7 @@
 #pragma once
 
 
-#include "GraphFunctions.h"
-
+#include "../Primitives/obMap.h"
 #define LevMarLikeConstant 1e-5;
 
 
