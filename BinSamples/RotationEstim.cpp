@@ -20,6 +20,9 @@ using namespace Eigen;
 
 int main(int argc, char** argv)
 {
+    #ifdef USE_OMP_C
+        coutGreen << "We are using openMP" << endlGreen;
+    #endif
     std::cout << "Got here" << std::endl;
 	InitProcAndGPU();
     std::cout << "Got here" << std::endl;

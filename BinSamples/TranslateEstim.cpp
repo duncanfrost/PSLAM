@@ -15,6 +15,9 @@ using namespace Eigen;
 
 int main(int argc, char** argv)
 {
+    #ifdef USE_OMP_C
+        coutGreen << "We are using openMP" << endlGreen;
+    #endif
 	//get one camera calibration, necessary for back projection of image plane
 	Camera myCamera(640,480,CamPlaystationEye);
 	

@@ -21,7 +21,10 @@ Camera myCamera;//camera object, calibration ...
 
 int main(int argc, char** argv)
 {
-	int im_w=640;
+    #ifdef USE_OMP_C
+        coutGreen << "We are using openMP" << endlGreen;
+    #endif
+    int im_w=640;
 	int im_h=480;
 	myVideoSource=new VideoSourceLiveCV(CamPlaystationEye);
 	myVideoSource->initCam();

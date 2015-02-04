@@ -24,6 +24,12 @@ MotherWindow *window2;
 
 int main(int argc, char** argv)
 {
+
+    #ifdef USE_OMP_C
+        coutGreen << "We are using openMP" << endlGreen;
+    #endif
+
+
 	Img1=cv::imread("/home/amaury/Pictures/jump.png");
 	Img2=cv::imread("/home/amaury/Pictures/jump2.png");
 

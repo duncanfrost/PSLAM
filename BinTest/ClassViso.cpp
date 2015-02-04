@@ -37,6 +37,12 @@ std::vector<p_feat> feature_p[4];
 
 int main(int argc, char** argv)
 {
+
+    #ifdef USE_OMP_C
+        coutGreen << "We are using openMP" << endlGreen;
+    #endif
+
+
 	int im_w=640;
 	int im_h=480;
 	myVideoSource=new VideoSourceLiveCV(CamPlaystationEye);

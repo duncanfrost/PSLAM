@@ -29,7 +29,7 @@ void keyboard_process(unsigned char key, int x, int y);
 void addDrawFunction();
 void disturb();
 
-int nb_kf=2;
+int nb_kf=3;
 int nbIter=1;
 obMap Map_Estim;
 
@@ -47,6 +47,9 @@ int im_h;
 
 int main(int argc, char** argv)
 {
+    #ifdef USE_OMP_C
+        coutGreen << "We are using openMP" << endlGreen;
+    #endif
 	//Vector2f v;
 	//v[0]=2;v[1]=0;
 	//std::cout<<v.squaredNorm()<<std::endl;

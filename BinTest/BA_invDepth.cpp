@@ -58,6 +58,12 @@ Vector2f getImagePlanNoise()
 
 int main(int argc, char** argv)
 {
+
+    #ifdef USE_OMP_C
+        coutGreen << "We are using openMP" << endlGreen;
+    #endif
+
+
 	im_w=640;
 	im_h=480;
 	myCamera.Init(im_w,im_h,CamPlaystationEye);

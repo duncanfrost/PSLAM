@@ -50,6 +50,11 @@ HomogeneousMatrix current_estimated_pose;
 
 int main(int argc, char** argv)
 {
+
+    #ifdef USE_OMP_C
+        coutGreen << "We are using openMP" << endlGreen;
+    #endif
+
 	Vector2f vtest;vtest[0]=2;vtest[1]=2;
 	std::cout<<vtest.squaredNorm()<<std::endl;
 	InitProcAndGPU();

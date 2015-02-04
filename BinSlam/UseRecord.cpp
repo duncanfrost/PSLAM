@@ -43,6 +43,12 @@ PlottingWindow *PlotWindow;
 
 int main(int argc, char** argv)
 {
+
+    #ifdef USE_OMP_C
+        coutGreen << "We are using openMP" << endlGreen;
+    #endif
+
+
 	InitProcAndGPU();
 
 	std::cout<<"################################################################# "<<std::endl;
