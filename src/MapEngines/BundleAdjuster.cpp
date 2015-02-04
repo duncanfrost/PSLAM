@@ -370,6 +370,7 @@ void BundleAdjuster::addMeasure(short _idKFMain,short _idKFPointMain,short _idPo
 	}
 }
 
+
 void BundleAdjuster::optimise(int nb_iter,bool robust)
 {
 	//coutMapping<<"BundleAdjuster::optimise> nbCamsToUpdate : "<<nbCamsToUpdate<<endlMapping;
@@ -388,7 +389,7 @@ void BundleAdjuster::optimise(int nb_iter,bool robust)
 #ifdef VERBOSE
 		coutMapping<<"\tBundleAdjuster::optimise> nbCamsToUpdate : "<<nbCamsToUpdate<<" => only do point optim"<<endlMapping;
 #endif
-		OptimisePointPosition(nb_iter);
+        OptimisePointPosition(nb_iter);
 	}
 	//if more than 1 then can do proper BA (example : one cam fixed and one cam to be updated)
 	else
@@ -405,7 +406,7 @@ void BundleAdjuster::optimise(int nb_iter,bool robust)
 #ifdef VERBOSE
 			coutMapping<<"\tBundleAdjuster::optimise> nbCamsToUpdate : "<<nbCamsToUpdate<<" => do BundleAdjust"<<endlMapping;
 #endif
-			BundleAdjust(nb_iter);	
+            BundleAdjust(nb_iter,true);
 		}
 	}
 }
