@@ -8,7 +8,7 @@
 	#define HGLUT <GL/glut.h>
 //#endif
 
-#define EIGEN_DONT_ALIGN
+//#define EIGEN_DONT_ALIGN
 
 #define WORK_DESKTOP
 #ifdef WORK_DESKTOP
