@@ -50,7 +50,7 @@ int main(int argc, char** argv)
 	std::cout<<"################    SLAM    NEW            ###################### "<<std::endl;
 	std::cout<<"################################################################# "<<std::endl;
 	//get camera calibration
-	//myVideoSource=new VideoSourceLiveCV(CamPlaystationEye);
+
     myVideoSource=new VideoSourceSeq("/media/duncanlocal/Data2/KITTI/dataset/sequences/00/image_0/%06d.png",KittiCam,0);
 	
 	//at turn :

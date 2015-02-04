@@ -15,7 +15,7 @@ VideoSourceSeq::VideoSourceSeq():amoVideoSource()
 
 };
 //example of path :"/dir/img_%04d.png"
-VideoSourceSeq::VideoSourceSeq(char *_printfPath,CameraType _camType,int id0):amoVideoSource(_camType)
+VideoSourceSeq::VideoSourceSeq(const char *_printfPath,CameraType _camType,int id0):amoVideoSource(_camType)
 {
 	frameId=id0;
 	printfPath=_printfPath;
@@ -42,7 +42,7 @@ VideoSourceSeq::VideoSourceSeq(char *_printfPath,CameraType _camType,int id0):am
 void VideoSourceSeq::initCam()
 {
 
-};
+}
 
 #include <iostream>
 #include <fstream>

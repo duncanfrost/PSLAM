@@ -10,14 +10,14 @@ class VideoSourceSeq : public amoVideoSource
  	//constructor without calibration
 	VideoSourceSeq();
 	//constructor with calibration
-	VideoSourceSeq(char *_printfPath,CameraType _camType,int id0=0);  
+    VideoSourceSeq(const char *_printfPath,CameraType _camType,int id0=0);
   
 	void initCam();
 	void grabNewFrame();
 	
     void setIncrement(int _i){increment=_i;}
  private:
-	char *printfPath;
+    const char *printfPath;
 	bool end_sequence;
 	
 	int increment;
