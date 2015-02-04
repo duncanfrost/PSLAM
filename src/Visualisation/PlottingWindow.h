@@ -10,8 +10,8 @@
 //TextureSet imgTexture;
 struct plotStruct
 {
-	plotStruct(){nb_val=0;timeLine=0;};
-	plotStruct(int _nv,int _t){init(_nv,_t);};
+    plotStruct(){nb_val=0;timeLine=0;}
+    plotStruct(int _nv,int _t){init(_nv,_t);}
 	void init(int _nv,int _t)
 	{
 		desallocate();
@@ -74,7 +74,7 @@ class PlottingWindow:public MotherWindow
 	void setVal(int _p,int _ival,float _val);
 	
 	//increment timeLine manually
-	void incrementTimeLine(){current_time=(current_time+1)%timeLine;};
+    void incrementTimeLine(){current_time=(current_time+1)%timeLine;}
 	
 	
  protected: 

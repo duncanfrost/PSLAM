@@ -63,7 +63,7 @@ struct uptoscaleFeature
 		nb_outlier=0;
 	};
 	
-	Vector3f getLocalCoordinates(){return toHomogeneous(posRef)*depthInRef;};
+    Vector3f getLocalCoordinates(){return toHomogeneous(posRef)*depthInRef;}
 	
 		
 	//io functions
@@ -131,7 +131,7 @@ struct matchMiniBA
 	bool matched;
 	Vector2f pos_p;//pos in meter in ref
 	Vector2f pos_c;//pos in meter in match
-	matchMiniBA(){matched=false;};
+    matchMiniBA(){matched=false;}
 };
 
 class KeyFrame
@@ -153,7 +153,7 @@ public:
 	std::vector<uptoscaleFeature> getGoodFeaturesFromRayIntersection(std::vector<p_match> &matches,Camera *myCamera,HomogeneousMatrix &KFtoCurrent);	
 	//do bundle adjustment to refine algebraic solution
 	//for now only use in Testing Virtual Scene (when put considerable image noise algebraic solution is far from refined one)
-	void doMiniBA(Camera *myCamera){doMiniBA(best_matches,best_features,myCamera,bestRelPose);};
+    void doMiniBA(Camera *myCamera){doMiniBA(best_matches,best_features,myCamera,bestRelPose);}
 	void doMiniBA(std::vector<p_match> &matches,std::vector<uptoscaleFeature> &feats, Camera *myCamera,HomogeneousMatrix &poseRel,bool useLM=false);
 	//check if depth is consistent in new stereo
 	std::vector<uptoscaleFeature> filterWithDepthConsistancy(std::vector<uptoscaleFeature> &GoodFeatures1);
@@ -170,58 +170,62 @@ public:
 	//##################################################################
 	//Things that have to do with map:		
 	//pose of the keyFrame
-	void setPose(HomogeneousMatrix _w_To_cam){w_To_cam.Init(_w_To_cam);};
-	HomogeneousMatrix getPose(){return w_To_cam;};
+    void setPose(HomogeneousMatrix _w_To_cam){w_To_cam.Init(_w_To_cam);}
+    HomogeneousMatrix getPose(){return w_To_cam;}
 	
 	//id 
-	void setId(int _id){id=_id;};
-	int getId(){return id;};
+    void setId(int _id){id=_id;}
+    int getId(){return id;}
 	
 	//called by constructor to init image pyramid
-	void makeKF_Image(cv::Mat &_img);	
-	cv::Mat *getImg_p(){return img_p;};
-	cv::Mat &getImg_p(int _l){return img_p[_l];};
+    void makeKF_Image(cv::Mat &_img);
+    cv::Mat *getImg_p(){return img_p;}
+    cv::Mat &getImg_p(int _l){return img_p[_l];}
 	
 	//depth range
-	Vector2f getDepthRange(){return depthRange;};
-	void setDepthRange(Vector2f _dr){depthRange=_dr;};
+    Vector2f getDepthRange(){return depthRange;}
+    void setDepthRange(Vector2f _dr){depthRange=_dr;}
 	
 	//get local best stereo result with scale
-	int getNbLocalBestFeatures(){return best_features.size();};
-	void addLocalBestFeature(uptoscaleFeature &_c){best_features.push_back(_c);};
-	uptoscaleFeature getLocalBestFeatures(int i){return best_features[i];};
-	uptoscaleFeature *getPtLocalBestFeatures(int i){return &best_features[i];};
-	std::vector<uptoscaleFeature> *getLocalBestFeatures(){return &best_features;};
-	void removeLocalBestFeatures(int i){best_features.erase(best_features.begin()+i);};//warning should remove Point view if feature is matched
-	void clearLocalBestFeatures(){best_features.clear();};
+    int getNbLocalBestFeatures(){return best_features.size();}
+    void addLocalBestFeature(uptoscaleFeature &_c){best_features.push_back(_c);}
+    uptoscaleFeature getLocalBestFeatures(int i){return best_features[i];}
+    uptoscaleFeature *getPtLocalBestFeatures(int i){return &best_features[i];}
+    std::vector<uptoscaleFeature> *getLocalBestFeatures(){return &best_features;}
+    void removeLocalBestFeatures(int i){best_features.erase(best_features.begin()+i);}//warning should remove Point view if feature is matched
+    void clearLocalBestFeatures(){best_features.clear();}
 	int indexCandidateFeatureFromVisoId(int idFeaturep);
 	int getNumberOfFeatureMatched();
-	HomogeneousMatrix getBestRelPose(){return bestRelPose;};
-	void setBestRelPose(HomogeneousMatrix _h){bestRelPose=_h;};
-	cv::Mat &getBestImgPair(){return img_best_pair;};
-	std::vector<p_match> *getBestLocalMatches(){return &best_matches;};
-	void setBestLocalMatches(std::vector<p_match> &_bestM){best_matches=_bestM;};
+    HomogeneousMatrix getBestRelPose(){return bestRelPose;}
+    void setBestRelPose(HomogeneousMatrix _h){bestRelPose=_h;}
+    cv::Mat &getBestImgPair(){return img_best_pair;}
+    std::vector<p_match> *getBestLocalMatches(){return &best_matches;}
+    void setBestLocalMatches(std::vector<p_match> &_bestM){best_matches=_bestM;}
 	
 	//use neigborhood
-	bool addNeighbour(NeigbourKFNew &_nKF){neigbours.push_back(_nKF);};
-	int getNbNeigbours(){return neigbours.size();};
-	NeigbourKFNew getNeigbour(int i){return neigbours[i];};//warning quite a large structure since has all matches stored in it, prefer pointer
-	NeigbourKFNew *getPtNeigbour(int i){return &neigbours[i];};
+    bool addNeighbour(NeigbourKFNew &_nKF){neigbours.push_back(_nKF);}
+    int getNbNeigbours(){return neigbours.size();}
+    NeigbourKFNew getNeigbour(int i){return neigbours[i];}//warning quite a large structure since has all matches stored in it, prefer pointer
+    NeigbourKFNew *getPtNeigbour(int i){return &neigbours[i];}
 	int isNeigbour(int i);
 	
 	//get map points
-	int getNbMapPoint(){return mMapPoints.size();};
-	void addMapPoint(MapPoint &_p){mMapPoints.push_back(_p);};
-	MapPoint *getPtMapPoint(int i){return &mMapPoints[i];};
-	void removePoint(int i){mMapPoints.erase(mMapPoints.begin()+i);};
-	int getNbUsedMapPoint(){int res=0;for(int i=0;i<mMapPoints.size();i++)if(mMapPoints[i].isUsed())res++;return res;};
+    int getNbMapPoint(){return mMapPoints.size();}
+    void addMapPoint(MapPoint &_p){
+        mMapPoints.push_back(_p);
+
+        std::cout<< "Adding map point " << _p.nbViews() << " " << _p.getView(2) << std::endl;
+    }
+    MapPoint *getPtMapPoint(int i){return &mMapPoints[i];}
+    void removePoint(int i){mMapPoints.erase(mMapPoints.begin()+i);}
+    int getNbUsedMapPoint(){int res=0;for(int i=0;i<mMapPoints.size();i++)if(mMapPoints[i].isUsed())res++;return res;}
 	
 	//##################################################################
 	//Things that have to do with tracker:	
 	//get relative pose estimate with lastely seen image
-	HomogeneousMatrix getRelativePose(){return relPose;};
-	void setRelativePose(HomogeneousMatrix &_p){relPose=_p;};
-	void setRelativePosePrevious(HomogeneousMatrix &_p){relPosePrevious=_p;};
+    HomogeneousMatrix getRelativePose(){return relPose;}
+    void setRelativePose(HomogeneousMatrix &_p){relPose=_p;}
+    void setRelativePosePrevious(HomogeneousMatrix &_p){relPosePrevious=_p;}
 
 	//estimate relative pose of last matched frame using matches and best stereo
 	HomogeneousMatrix computeRelativeCurrentPoseWithLocalFeatures(Camera *_myCamera);		
@@ -229,26 +233,25 @@ public:
 	HomogeneousMatrix computeRelativeCurrentPoseWithAllMatches(Camera *_myCamera);		
 
 	//get last matches
-	int getLastNumberMatches(){return matchesCurrent.size();};
-	std::vector<p_match> getCurrentMatches(){return matchesCurrent;};
+    int getLastNumberMatches(){return matchesCurrent.size();}
+    std::vector<p_match> getCurrentMatches(){return matchesCurrent;}
 	
 	//get overlap with lastly seen frame; just use lastly estimated homography
 	void computeOverlap();
-	float getOverlapWithLastFrame(){return overlapWithLast;};
+    float getOverlapWithLastFrame(){return overlapWithLast;}
 	
 	//get overlap with lastly seen frame; just use lastly estimated homography
-	Matrix3f getHomography(){return Homography;};
-	void setHomography(Matrix3f _h){Homography=_h;matcher.setHomography(Homography);};
+    Matrix3f getHomography(){return Homography;}
+    void setHomography(Matrix3f _h){Homography=_h;matcher.setHomography(Homography);}
 	
 	//get average reconstruction angle with lastly seen frame (used in mapTracker to check if baseline large enough to define new keyframe)
-	float getAverageReconstructionAngle(){return average_recAngle;};
-	
+    float getAverageReconstructionAngle(){return average_recAngle;}
 	//get last estimated fundamental score
 	float getLastFundamentalScore(){return last_fundamental_score;}
 	
 	//see name
-	bool haveLocalBestFeaturesChanged(){return localBestFeaturesHaveChanged;};
-	void LocalBestFeaturesHaveBeenChecked(){localBestFeaturesHaveChanged=false;};
+    bool haveLocalBestFeaturesChanged(){return localBestFeaturesHaveChanged;}
+    void LocalBestFeaturesHaveBeenChecked(){localBestFeaturesHaveChanged=false;}
 	
 	//void SaveNewMatchesAndPoseForMiniBA(std::vector<p_match> &matchesCurrent,HomogeneousMatrix &relPose,Camera *_myCamera);
 	//void DoMiniBA(Camera *_myCamera);

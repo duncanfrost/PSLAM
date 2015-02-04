@@ -32,7 +32,7 @@ class PoseGraphOptimiser
 public:
 	PoseGraphOptimiser(obMap *_myMap);
 	void optimiseInnerWindow(std::vector<int> &_innerWindowKFs,int nb_iter=10);
-	~PoseGraphOptimiser(){};
+    ~PoseGraphOptimiser(){}
 	
 	//fill Bundle
 	void addCamera(HomogeneousMatrix _pose,int _id,bool _fixed);

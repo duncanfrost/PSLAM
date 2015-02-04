@@ -18,7 +18,7 @@ struct PointInvDepth
     Vector2f meterCoord;
     float invDepth;
     float invDepthCovar;  
-    PointInvDepth(){invDepthCovar=0;};
+    PointInvDepth(){invDepthCovar=0;}
 };
 	
 
@@ -32,7 +32,7 @@ class MapWindow:public MotherWindow
 	
 	void addCamera(HomogeneousMatrix *_camPose,Vector3f _col,float _lineSize=1.);
 	void addPointCloud(std::vector<Vector3f> *_map);
-	void addPointCloud(std::vector<PointInvDepth> *_map){pointInvClouds.push_back(_map);};
+    void addPointCloud(std::vector<PointInvDepth> *_map){pointInvClouds.push_back(_map);}
 	void addMap(obMap *_map);//if several maps are added then use first one as GT
 	
 	//set the position of the camera from which map is viewed
@@ -44,12 +44,12 @@ class MapWindow:public MotherWindow
 	void set_velocity_translation(float _f);
 	void set_camera_drawn_size(float _f);
 	
-	void showClosestKF(int i){closestKF=i;};
-	void showActiveKF(std::vector<int> &_activeKF){activeKF=_activeKF;};	
+    void showClosestKF(int i){closestKF=i;}
+    void showActiveKF(std::vector<int> &_activeKF){activeKF=_activeKF;}
 	
-	void showTextures(){b_showTextures=!b_showTextures;};
-	void showFeatureConnections(){b_showFeatureConnections=!b_showFeatureConnections;};
-	void showLocalFeature(){b_showLocalFeature=!b_showLocalFeature;};
+    void showTextures(){b_showTextures=!b_showTextures;}
+    void showFeatureConnections(){b_showFeatureConnections=!b_showFeatureConnections;}
+    void showLocalFeature(){b_showLocalFeature=!b_showLocalFeature;}
 
 
 	

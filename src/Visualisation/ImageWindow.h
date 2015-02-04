@@ -17,8 +17,8 @@ class ImageWindow:public MotherWindow
 	void CreateWindow();
 	void prepare_draw();
 	
-	void InitPreIdle(){};
-	void InitPostIdle(){};
+    void InitPreIdle(){}
+    void InitPostIdle(){}
 
  protected: 
 	amoVideoSource *vid_source;

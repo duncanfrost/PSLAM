@@ -13,13 +13,13 @@ using namespace Eigen;
 
 struct amoRect
 {
- 	amoRect(Vector2f _x1,Vector2f _x2){x1=_x1;x2=_x2;};
+    amoRect(Vector2f _x1,Vector2f _x2){x1=_x1;x2=_x2;}
 	
 	Vector2f x1,x2;//top left and bottom right corners
 	
-	bool isInRect(Vector2f x){return (x[0]>=x1[0] && x[0]<x2[0] && x[1]>=x1[1] && x[1]<x2[1]);};
-	bool isInRect(int x,int y){return (x>=x1[0] && x<x2[0] && y>=x1[0] && y<x2[1]);};
-	bool isInRect(float x,float y){return (x>=x1[0] && x<x2[0] && y>=x1[0] && y<x2[1]);};
+    bool isInRect(Vector2f x){return (x[0]>=x1[0] && x[0]<x2[0] && x[1]>=x1[1] && x[1]<x2[1]);}
+    bool isInRect(int x,int y){return (x>=x1[0] && x<x2[0] && y>=x1[0] && y<x2[1]);}
+    bool isInRect(float x,float y){return (x>=x1[0] && x<x2[0] && y>=x1[0] && y<x2[1]);}
 };
 
 bool isInImage(Vector2i imageSize,Vector2f p);

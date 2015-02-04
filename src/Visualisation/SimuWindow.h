@@ -27,10 +27,10 @@ class SimuWindow:public MotherWindow
 	void setLight();
 	
 	//get current data
-	HomogeneousMatrix getCurrentPose(){return displayedPose;};
-	cv::Mat &getCurrentImage(){return current_img;};
-	cv::Mat &getCurrentImageBW(){return current_img_BW;};
-	cv::Mat &getCurrentDepth(){return current_img_Z;};
+    HomogeneousMatrix getCurrentPose(){return displayedPose;}
+    cv::Mat &getCurrentImage(){return current_img;}
+    cv::Mat &getCurrentImageBW(){return current_img_BW;}
+    cv::Mat &getCurrentDepth(){return current_img_Z;}
 	
 	
  protected: 

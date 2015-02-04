@@ -13,7 +13,7 @@ class MapOptimiserEssential
 {
 public:
 	MapOptimiserEssential(obMap *_myMap);
-	~MapOptimiserEssential(){};
+    ~MapOptimiserEssential(){}
 	
 	//will optimise scale and relative positions of KFs
 	//if innerWindow corresponds to all the frames of the submap, ie no

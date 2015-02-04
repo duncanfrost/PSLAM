@@ -23,8 +23,8 @@
 
 struct TextureSet  
 {
-	TextureSet():isAllocated(false){};
-	~TextureSet(){if(isAllocated)glDeleteTextures(1,&Texture);};
+    TextureSet():isAllocated(false){}
+    ~TextureSet(){if(isAllocated)glDeleteTextures(1,&Texture);}
 	GLuint Texture;
 	float Text_wu;
 	float Text_hu;

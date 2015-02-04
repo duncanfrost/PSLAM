@@ -34,23 +34,23 @@ class amoVideoSource
 	void GetRGBFrame(cv::Mat &_imRGB); 
 	
 	//get pointer to the frame previously acquired (no copy)
-	cv::Mat* GetFramePointer(){return &imRGB;};  
-	cv::Mat* GetFramePointerBW(){return &imBW;};  
+    cv::Mat* GetFramePointer(){return &imRGB;}
+    cv::Mat* GetFramePointerBW(){return &imBW;}
 	
 	//get image size
-	Vector2i getSize(){return mirSize;};
-	int getWidth(){return mirSize[0];};
-	int getHeight(){return mirSize[1];};
+    Vector2i getSize(){return mirSize;}
+    int getWidth(){return mirSize[0];}
+    int getHeight(){return mirSize[1];}
 	//get frame number
-	int getFrameId(){return frameId;};
+    int getFrameId(){return frameId;}
 
-	Camera* getPointerCamera(){return &myCamera;};
+    Camera* getPointerCamera(){return &myCamera;}
 	~amoVideoSource();
 
 	//if want to use lvl pyramid instead of raw image
 	void setLvlAcquisition(short _l);
 	
-	void setRecord(std::string _printfPathRecord){printfPathRecord=_printfPathRecord;record=true;};
+    void setRecord(std::string _printfPathRecord){printfPathRecord=_printfPathRecord;record=true;}
 	void recordFrame();
 
  protected: 

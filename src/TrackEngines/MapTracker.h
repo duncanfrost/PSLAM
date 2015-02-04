@@ -35,13 +35,13 @@ public:
 	void TrackFrame(cv::Mat &_current_img,cv::Mat *_current_img_col=NULL,bool useCol=false);
 	
 	//get current pose
-	HomogeneousMatrix getPose(){return relPose*myMap->getKF(idrelKF)->getPose();};
+    HomogeneousMatrix getPose(){return relPose*myMap->getKF(idrelKF)->getPose();}
 	
 	void updateRelPoseAfterMapOptim(){relPose=myMap->getKF(idrelKF)->getRelativePose();}
 	
 	//get id KF relative
-	int getIdRelKF(){return idrelKF;};
-	std::vector<int> &getClosestKFs(){return id_closestKF;};
+    int getIdRelKF(){return idrelKF;}
+    std::vector<int> &getClosestKFs(){return id_closestKF;}
 private:
   
 	//pointers o camera and map

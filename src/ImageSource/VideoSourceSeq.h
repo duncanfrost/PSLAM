@@ -15,7 +15,7 @@ class VideoSourceSeq : public amoVideoSource
 	void initCam();
 	void grabNewFrame();
 	
-	void setIncrement(int _i){increment=_i;};
+    void setIncrement(int _i){increment=_i;}
  private:
 	char *printfPath;
 	bool end_sequence;

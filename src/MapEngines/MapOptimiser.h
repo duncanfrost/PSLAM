@@ -29,7 +29,7 @@ class MapOptimiser
 {
 public:
 	MapOptimiser(obMap *_myMap);
-	~MapOptimiser(){};
+    ~MapOptimiser(){}
 	
 	//use only keyframe to keyframe matches(no mapPoints=> good for marginalisation)
 	void optimiseInnerWindow(std::vector<int> &_innerWindowKFs,int nb_iter=10);

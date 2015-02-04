@@ -64,7 +64,7 @@ public:
 	void optimiseInnerWindow(std::vector<int> &_innerWindowKFs,int nb_iter=10,bool robust=true);
 	
 	
-	~BundleAdjuster(){};
+    ~BundleAdjuster(){}
 #ifdef USE_OMP_C	
 	void setMoreImportantStuffToDo(bool *_moreImportantStuffWaiting,omp_lock_t *_lock_check_more_prior);
 #endif	
@@ -100,8 +100,8 @@ public:
 	Vector3f getUpdatedPointPosition(int id_kf_main,int id_main);
 	
 	//return resulting outliers
-	int nbOultiers(){return mOutliers.size();};
-	OutlierMeasure &getOultiers(int i){return mOutliers[i];};
+    int nbOultiers(){return mOutliers.size();}
+    OutlierMeasure &getOultiers(int i){return mOutliers[i];}
 	
 	//make it clear functions :
 	void BundleAdjust(int nb_iter=10,bool LM=false);//like BundleAdjustRobust without Tukey function
@@ -109,7 +109,7 @@ public:
 
 	bool hasBAConverged(){return hasConverged;}	
 	bool hasBAGoneWrong(){return goneWrong;}
-	ConvergenceResult getConvergenceResult();
+    ConvergenceResult getConvergenceResult();
 private:
 	//for io with Map
 	obMap *myMap;

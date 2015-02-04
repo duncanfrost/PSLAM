@@ -35,26 +35,26 @@ public:
 	
 	
 	//get full representation
-	Vector3f get_translation(){return t;};
+    Vector3f get_translation(){return t;}
 	Matrix3f get_rotation(){return Rmat;}
-	Matrix4f get_HomogMatrix(){return Hmat;};
+    Matrix4f get_HomogMatrix(){return Hmat;}
 	
 	//get 6D parameterisation
 	void get_p(float *_p){for(int i=0;i<3;i++)_p[i]=u[i];for(int i=0;i<3;i++)_p[i+3]=w[i];}
 	VectorXf get_p(){VectorXf p(6);for(int i=0;i<3;i++)p[i]=u[i];for(int i=0;i<3;i++)p[i+3]=w[i];return p;}
-	Vector3f get_u(){return u;};
-	Vector3f get_w(){return w;};
-	float get_angle(){return angle;};
+    Vector3f get_u(){return u;}
+    Vector3f get_w(){return w;}
+    float get_angle(){return angle;}
 
 	//get inverse of homogeneous transformation
 	HomogeneousMatrix inverse();
 	
 	//set functions
-	void set_translation(Vector3f _tVec){Init(_tVec,Rmat);};
-	void set_rotation(Matrix3f _Rmat){Init(t,_Rmat);};
+    void set_translation(Vector3f _tVec){Init(_tVec,Rmat);}
+    void set_rotation(Matrix3f _Rmat){Init(t,_Rmat);}
 	
 	//rescale translational part
-	void normalize_translation(float _d){set_translation((_d/sqrt(t.squaredNorm()))*t);};
+    void normalize_translation(float _d){set_translation((_d/sqrt(t.squaredNorm()))*t);}
 
 	Vector3f operator*(const Vector3f &_p);
 	HomogeneousMatrix operator*(HomogeneousMatrix _H);
@@ -78,7 +78,7 @@ public:
 	void saveToStream(std::ofstream &fout);
 	void loadFromStream(std::ifstream &fout);
 	
-	~HomogeneousMatrix(){};	
+    ~HomogeneousMatrix(){}
 private:
 	//homogeneous representation
 	Matrix4f Hmat;

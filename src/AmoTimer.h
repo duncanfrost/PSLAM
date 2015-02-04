@@ -7,7 +7,7 @@
 class amoTimer
 {
   public:
-	amoTimer(){};
+    amoTimer(){}
 	void start()
 	{			    
 			gettimeofday(&t1, NULL);		

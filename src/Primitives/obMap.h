@@ -20,14 +20,14 @@ class obMap
 {
 public:
 	obMap();
-	~obMap(){};
+    ~obMap(){}
 	
 	//get camera pointer
-	void InitCam(Camera *_myCamera){myCamera=_myCamera;};
-	Camera *getCamera(){return myCamera;};
+    void InitCam(Camera *_myCamera){myCamera=_myCamera;}
+    Camera *getCamera(){return myCamera;}
 	
 	//KF control
-	int getNbKeyFrames(){return KeyFrameList.size();};
+    int getNbKeyFrames(){return KeyFrameList.size();}
 	KeyFrame* getKF(int i){return &KeyFrameList[i];}
 	
 	//if want to start a new submap (ie part of map with no known 
@@ -49,7 +49,7 @@ public:
 	std::vector<int> getDirectNeigborsWithGoodEstimatedOverlap(std::vector<int> &_KFs);
 	std::vector<int> getDirectNeigborsWithGoodEstimatedOverlapDepth(std::vector<int> &_KFs,int _d);
 	//get submap connected with one KF, ie list of KF with distance < depth (result includes input)
-	std::vector<int> getConnectedKeyframes(int _idkf,int _depth=-1){std::vector<int> _idkfv;_idkfv.push_back(_idkf);return getConnectedKeyframes(_idkfv,_depth);};
+    std::vector<int> getConnectedKeyframes(int _idkf,int _depth=-1){std::vector<int> _idkfv;_idkfv.push_back(_idkf);return getConnectedKeyframes(_idkfv,_depth);}
 	std::vector<int> getConnectedKeyframes(std::vector<int> _idkf,int _depth=-1);
 	
 	//get information matrix corresponding to min variance optimisation between local features of two neigboring keyframes

@@ -13,7 +13,7 @@ class EmptyWindow:public MotherWindow
  public:
 	EmptyWindow(std::string _title,int _width,int _height);
 	void CreateWindow();
-	void prepare_draw(){};
+    void prepare_draw(){}
 	
  protected: 
 	void (*DrawFunction)();
