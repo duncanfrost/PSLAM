@@ -1,8 +1,9 @@
+//STATUS: Line 809
 #include "BundleAdjuster.h"
 
 #define MIN_NB_MEASURE_PER_OPTIMISED_CAM 5
 
-
+//This this and invMatrix3f are used for matrix inversion?
 inline float det2(float &m00,float &m01,float &m10,float &m11)
 {
 	return m00*m11-m01*m10;
@@ -17,7 +18,6 @@ Matrix3f invMatrix3f(Matrix3f &M)
 	res(1,0)=-det2(M(0,1),M(0,2),M(2,1),M(2,2));res(1,1)= det2(M(0,0),M(0,2),M(2,0),M(2,2));res(1,2)=-det2(M(0,0),M(0,1),M(2,0),M(2,1));
 	res(2,0)= det2(M(0,1),M(0,2),M(1,1),M(1,2));res(2,1)=-det2(M(0,0),M(0,2),M(1,0),M(1,2));res(2,2)= det2(M(0,0),M(0,1),M(1,0),M(1,1));
 	return invDet*res;
-	
 }
 
 BundleAdjuster::BundleAdjuster(obMap *_myMap)
@@ -47,11 +47,12 @@ void BundleAdjuster::setMoreImportantStuffToDo(bool *_moreImportantStuffWaiting,
 void BundleAdjuster::optimiseInnerWindow(std::vector<int> &innerWin,int nb_iter,bool robust)
 {
 	std::cout<<"bundleAdjuster optimiseInnerWindow"<<std::endl;
-	std::vector<int> optimKF;
+    std::vector<int> optimKF; //The keyframe id's that are going to be optimised.
 	optimKF=innerWin;
 	//get outer fix windows:
 	std::vector<int> fixedKF=myMap->getDirectNeigbors(optimKF);
 
+    // If there are no keyframes which are fixed around us, we need to fix one of the inner window keyframes.
 	if(optimKF.size()!=0 && fixedKF.size()==0)
 	{
 		fixedKF.push_back(*optimKF.begin());
@@ -87,7 +88,8 @@ void BundleAdjuster::optimiseInnerWindow(std::vector<int> &innerWin,int nb_iter,
 	std::vector<int> allKF=optimKF;
 	for(int i=0;i<fixedKF.size();i++)allKF.push_back(fixedKF[i]);
 	
-	//have to put all map points (include all matched local features)
+    //have to put all map points (include all matched local features)
+    //This could go into one loop
 	for(int i=0;i<allKF.size();i++)
 	{
 		KeyFrame &kf=*myMap->getKF(allKF[i]);
@@ -135,6 +137,7 @@ void BundleAdjuster::optimiseInnerWindow(std::vector<int> &innerWin,int nb_iter,
 			int idBA_kf_pt;
 			if(feat.matched)
 			{
+                std::cout << "point" << std::endl;
 				//if feature matched then need to link measure to matched point 
 				if(!feat.ptKForigin->getPtMapPoint(feat.idPoint)->isUsed())continue;
 				idBA_pt=feat.idPoint;
@@ -143,29 +146,30 @@ void BundleAdjuster::optimiseInnerWindow(std::vector<int> &innerWin,int nb_iter,
 			else
 			{
 				//if not matched then measure is linked to local feature
-				idBA_pt=-id_feat-1;
+                std::cout << "local feature" << std::endl;
+                idBA_pt=-id_feat-1;
 				idBA_kf_pt=allKF[c];
 			}
 			
 			
 			//add measure from kf
-			//std::cout<<"add meas in "<<allKF[c]<<" and "<<-allKF[c]-1<<std::endl;
+            //std::cout<<"add meas in "<<allKF[c]<<" and "<<-allKF[c]-1<<std::endl;
 			Vector2f measMeterp = myCamera->ToMeters(Vector2f(bestMatches[m].u1p,bestMatches[m].v1p));
-			//std::cout<<"\t kf meas : "<<allKF[c]<<" pt: kf "<<idBA_kf_pt<<" id "<<idBA_pt<<std::endl;
+            //std::cout<<"\t kf meas : "<<allKF[c]<<" pt: kf "<<idBA_kf_pt<<" id "<<idBA_pt<<std::endl;
 			addMeasure(allKF[c],idBA_kf_pt,idBA_pt,measMeterp,0,m);
 			
 			//add measure from ministereo
 			Vector2f measMeterc = myCamera->ToMeters(Vector2f(bestMatches[m].u1c,bestMatches[m].v1c));
-			//std::cout<<"\t kf meas : "<<-allKF[c]-1<<" pt: kf "<<idBA_kf_pt<<" id "<<idBA_pt<<std::endl;
+            //std::cout<<"\t kf meas : "<<-allKF[c]-1<<" pt: kf "<<idBA_kf_pt<<" id "<<idBA_pt<<std::endl;
 			addMeasure(-allKF[c]-1,idBA_kf_pt,idBA_pt,measMeterc,0,m);
 			
 		}
 		
 	}
-	
+
 	//do bundle adjustment
 	//std::cout<<"do BA"<<std::endl;
-	optimise(nb_iter,robust);
+    optimise(nb_iter,robust);
 	
 	//retrieve result
 	if(getConvergenceResult()!=Diverged)
@@ -265,7 +269,7 @@ void BundleAdjuster::optimiseInnerWindow(std::vector<int> &innerWin,int nb_iter,
 					if(id_feat_v!=-1)
 					{
 						uptoscaleFeature &feat_v=*myMap->getKF(kfView)->getPtLocalBestFeatures(id_feat_v);
-						feat_v.matched=false;
+                        feat_v.matched=false;
 					}
 					//remove last view
 					point.removeViews();
@@ -321,6 +325,7 @@ void BundleAdjuster::addMeasure(short _idKFMain,short _idKFPointMain,short _idPo
 {
 	//coutMapping<<endlMapping<<"Add Measure "<<id_feat<<endlMapping;
 	BAmeasure newMeas;
+    //This is why id's are dumb
 	//get corresponding id of kf in Bundle, could be optimised a bit...
 	newMeas.kf_id=-1;
 	for(int c=0;c<mCams.size();c++)
@@ -356,7 +361,7 @@ void BundleAdjuster::addMeasure(short _idKFMain,short _idKFPointMain,short _idPo
 			nbCamsToUpdate++;
 		}
 	
-		//check of cam is not fixed and had enough measures to be optimised
+        //check of point is not fixed and had enough measures to be optimised
 		if(mPoints[newMeas.pt_id].nb_measures==2)
 		{
 			mPoints[newMeas.pt_id].id_optim=nbPointsToUpdate;
@@ -374,9 +379,9 @@ void BundleAdjuster::addMeasure(short _idKFMain,short _idKFPointMain,short _idPo
 void BundleAdjuster::optimise(int nb_iter,bool robust)
 {
 	//coutMapping<<"BundleAdjuster::optimise> nbCamsToUpdate : "<<nbCamsToUpdate<<endlMapping;
-	//set cam to be fixed if they don t have enough measures
+    //set cam to be fixed if they don t have enough measures
 	for(int c=0;c<mCams.size();c++)
-		if(mCams[c].nb_measures<MIN_NB_MEASURE_PER_OPTIMISED_CAM)mCams[c].fixed=true;//is not really important there cause we can check id_optim==-1 but still its cleaner like this
+        if(mCams[c].nb_measures<MIN_NB_MEASURE_PER_OPTIMISED_CAM)mCams[c].fixed=true;//is not really important there cause we can check id_optim==-1 but still its cleaner like this
 	
 	//for(int i=0;i<mCams.size();i++)
 	//	coutMapping<<"mCams "<<i<<" : nbMeas = "<<mCams[i].nb_measures<<endlMapping;
@@ -410,6 +415,8 @@ void BundleAdjuster::optimise(int nb_iter,bool robust)
 		}
 	}
 }
+
+//There seems to be no error checking here
 void BundleAdjuster::OptimisePointPosition(int nb_iter)
 {
 	int nb_keyFrames=mCams.size();
@@ -468,7 +475,7 @@ void BundleAdjuster::OptimisePointPosition(int nb_iter)
 				
 				//compute error with observed points (in meter in z=1 plane)
 				Vector2f x_d=mMeasures[m].coord;//desired projection= measurement
-				Vector2f x_c=myCamera->ProjectZ1(mapPointsCam);//current projection				
+                Vector2f x_c=myCamera->ProjectZ1(mapPointsCam);//current projection
 
 				//compute jacobian only if point or cam linked to measure is to be optimised
 				Vector2f proj_error=x_d-x_c;
@@ -481,7 +488,8 @@ void BundleAdjuster::OptimisePointPosition(int nb_iter)
 				Vector3f updatex=de_dx.transpose()*proj_error;
 				for(int k=0;k<3;k++)	Jtex[pt_opt_id][k]-=updatex[k];
 				//update Hessian
-				Hxx[pt_opt_id]+=de_dx.transpose()*de_dx;			
+                Hxx[pt_opt_id]+=de_dx.transpose()*de_dx; //Each point has its own Hxx. No need to put every one in a big matrix as its sparse.
+                //Not even sure second order is necessary here
 			}
 		}
 
@@ -641,39 +649,37 @@ void BundleAdjuster::BundleAdjustRobust(int nb_iter)
 	for(int iter=0;iter<nb_iter;iter++)
 	{
 		//std::cout<<"iteration : "<<iter <<std::endl;
-		startIterRobust:
+        startIterRobust:
 		
-		//get Tukey factor
-		std::vector<float> vdErrorSquared;
-		for(int m=0;m<mMeasures.size();m++)
-		{
-			short &c=mMeasures[m].kf_id;
-			short &p=mMeasures[m].pt_id;
-			HomogeneousMatrix &pose=mCams[c].pose;
-			
-			//get 3D pose in camera frame
-			Vector3f mapPointsCam=pose*mPoints[p].position;	
-			if(mapPointsCam[2]>0)
-			{
-				//compute error with observed points (in meter in z=1 plane)
-				Vector2f x_d=mMeasures[m].coord;//desired projection= measurement
-				Vector2f x_c=myCamera->ProjectZ1(mapPointsCam);//current projection				
-				Vector2f error=invScaleLevel(mMeasures[m].lvl_meas)*myCamera->m2PixProjJac()*(x_d-x_c);//error in pixels //WARNING has been modif, used to be in meters
-				vdErrorSquared.push_back(error.transpose()*error);
-			}
-		}
-		float sigma_tukey=getSigmaSquared(vdErrorSquared);
-		if(sigma_tukey < MINSIGMATUKEY)
-			sigma_tukey = MINSIGMATUKEY;
+        //get Tukey factor
+
+        std::vector<float> vdErrorSquared;
+        for(int m=0;m<mMeasures.size();m++)
+        {
+            short &c=mMeasures[m].kf_id;
+            short &p=mMeasures[m].pt_id;
+            HomogeneousMatrix &pose=mCams[c].pose;
+
+            //get 3D pose in camera frame
+            Vector3f mapPointsCam=pose*mPoints[p].position;
+            if(mapPointsCam[2]>0)
+            {
+                //compute error with observed points (in meter in z=1 plane)
+                Vector2f x_d=mMeasures[m].coord;//desired projection= measurement
+                Vector2f x_c=myCamera->ProjectZ1(mapPointsCam);//current projection
+                Vector2f error=invScaleLevel(mMeasures[m].lvl_meas)*myCamera->m2PixProjJac()*(x_d-x_c);//error in pixels //WARNING has been modif, used to be in meters
+                vdErrorSquared.push_back(error.transpose()*error);
+            }
+        }
+        float sigma_tukey=getSigmaSquared(vdErrorSquared);
+        if(sigma_tukey < MINSIGMATUKEY)
+            sigma_tukey = MINSIGMATUKEY;
 
 		
 		
 		//points will be considered for optimisation only if they have two valid projection
 		//that was kind of done already but Tukey function was not known yet
 		//=> update taking robust function into account
-		//std::cout<<"nb measure before outlier check : "<<mMeasures.size() <<std::endl;
-		std::cout<<"nbCamsToUpdate : "<<nbCamsToUpdate <<std::endl;
-		//std::cout<<"sigma_tukey : "<<sigma_tukey <<std::endl;
 		for(int m=0;m<mMeasures.size();m++)
 		{
 			short &c=mMeasures[m].kf_id;
@@ -765,10 +771,10 @@ void BundleAdjuster::BundleAdjustRobust(int nb_iter)
 		VectorXf Jtex(3*nbPointsToUpdate);Jtex.setZero();
 		VectorXf Jtep(6*nbCamsToUpdate);Jtep.setZero();
 
-		Matrix3f Hxx[nbPointsToUpdate];for(int i=0;i<nbPointsToUpdate;i++)Hxx[i].setZero();
+        Matrix3f Hxx[nbPointsToUpdate];for(int i=0;i<nbPointsToUpdate;i++)Hxx[i].setZero(); //Hessian block for points
 		Matrix3f HxxInv[nbPointsToUpdate];
-		MatrixXf Hpp(6*nbCamsToUpdate,6*nbCamsToUpdate);Hpp.setZero();
-		MatrixXf Hxp(3*nbPointsToUpdate,6*nbCamsToUpdate);Hxp.setZero();
+        MatrixXf Hpp(6*nbCamsToUpdate,6*nbCamsToUpdate);Hpp.setZero(); //Hessian block for all cameras
+        MatrixXf Hxp(3*nbPointsToUpdate,6*nbCamsToUpdate);Hxp.setZero(); //Off-diagonal hessian block
 		
 
 		for(int i=0;i<fJacobian.size();i++)			
@@ -782,7 +788,7 @@ void BundleAdjuster::BundleAdjustRobust(int nb_iter)
 				Vector3f updatex=fJacobian[i].weight*fJacobian[i].de_dx.transpose()*fJacobian[i].proj_error;
 				for(int k=0;k<3;k++)	Jtex[3*pt_opt_id+k]-=updatex[k];
 				//update Hessian
-				Hxx[pt_opt_id]+=fJacobian[i].weight*fJacobian[i].de_dx.transpose()*fJacobian[i].de_dx;
+                Hxx[pt_opt_id]+=fJacobian[i].weight*fJacobian[i].de_dx.transpose()*fJacobian[i].de_dx; //Usual assembly of blocks
 			}
 			if(cam_opt_id!=-1)
 			{
@@ -790,9 +796,8 @@ void BundleAdjuster::BundleAdjustRobust(int nb_iter)
 				VectorXf updatep=fJacobian[i].weight*fJacobian[i].de_dp.transpose()*fJacobian[i].proj_error;
 				for(int k=0;k<6;k++)	Jtep[k+6*cam_opt_id]-=updatep[k];
 				//update Hessian
-				Hpp.block(6*cam_opt_id,6*cam_opt_id,6,6)+=fJacobian[i].weight*fJacobian[i].de_dp.transpose()*fJacobian[i].de_dp;
-				
-				if(pt_opt_id!=-1)
+                Hpp.block(6*cam_opt_id,6*cam_opt_id,6,6)+=fJacobian[i].weight*fJacobian[i].de_dp.transpose()*fJacobian[i].de_dp; //Again for the camera
+                if(pt_opt_id!=-1)
 				{
 					MatrixXf updatehxp=fJacobian[i].weight*fJacobian[i].de_dx.transpose()*fJacobian[i].de_dp;
 					for(int k=0;k<3;k++)
